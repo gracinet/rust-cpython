@@ -1,3 +1,109 @@
+//! Work wih Python capsules
+//!
+//! Capsules are the preferred way to export a C API to be consumed by other extension modules,
+//! see [Providing a C API for an Extension Module](https://docs.python.org/3/extending/extending.html#using-capsules).
+//!
+//! In particular, capsules can be very useful to start adding Rust extensions besides
+//! existing traditional C ones, be it for gradual rewrites or to extend with new functionality.
+//!
+//! This module allows to retrieve a capsule data, for consumption from Rust.
+//!
+//! # Example
+//! This retrieves and use one of the simplest capsules in the Python standard library, found in
+//! the `unicodedata` module.
+//!
+//! ```
+//! #[macro_use] extern crate cpython;
+//! extern crate libc;
+//!
+//! use cpython::capsule::retrieve_capsule;
+//! use cpython::Python;
+//! use libc::{c_char, c_int};
+//! use std::ffi::{c_void, CStr, CString};
+//! use std::mem;
+//! use std::ptr::null_mut;
+//!
+//! #[allow(non_camel_case_types)]
+//! type Py_UCS4 = u32;
+//! const UNICODE_NAME_MAXLEN: usize = 256;
+//!
+//! #[repr(C)]
+//! pub struct unicode_name_CAPI {
+//!     // the `ucd` signature arguments are actually optional (can be `NULL`) FFI PyObject
+//!     // pointers used to pass alternate (former) versions of Unicode data.
+//!     // We won't need to use them with an actual value in these examples, so it's enough to
+//!     // specify them as `*mut c_void`, and it spares us a direct reference to the lower
+//!     // level Python FFI bindings.
+//!     size: c_int,
+//!     getname: unsafe extern "C" fn(
+//!         ucd: *mut c_void,
+//!         code: Py_UCS4,
+//!         buffer: *mut c_char,
+//!         buflen: c_int,
+//!         with_alias_and_seq: c_int,
+//!     ) -> c_int,
+//!     getcode: unsafe extern "C" fn(
+//!         ucd: *mut c_void,
+//!         name: *const c_char,
+//!         namelen: c_int,
+//!         code: *mut Py_UCS4,
+//!     ) -> c_int,
+//! }
+
+//! #[derive(Debug, PartialEq)]
+//! pub enum UnicodeDataError {
+//!     InvalidCode,
+//!     UnknownName,
+//! }
+
+//! impl unicode_name_CAPI {
+//!     pub fn get_name(&self, code: Py_UCS4) -> Result<CString, UnicodeDataError> {
+//!         let mut buf: Vec<c_char> = Vec::with_capacity(UNICODE_NAME_MAXLEN);
+//!         let buf_ptr = buf.as_mut_ptr();
+//!         if unsafe {
+//!           ((*self).getname)(null_mut(), code, buf_ptr, UNICODE_NAME_MAXLEN as c_int, 0)
+//!         } != 1 {
+//!             return Err(UnicodeDataError::InvalidCode);
+//!         }
+//!         mem::forget(buf);
+//!         Ok(unsafe { CString::from_raw(buf_ptr) })
+//!     }
+//!
+//!     pub fn get_code(&self, name: &CStr) -> Result<Py_UCS4, UnicodeDataError> {
+//!         let namelen = name.to_bytes().len() as c_int;
+//!         let mut code: [Py_UCS4; 1] = [0; 1];
+//!         if unsafe {
+//!             ((*self).getcode)(null_mut(), name.as_ptr(), namelen, code.as_mut_ptr())
+//!         } != 1 {
+//!             return Err(UnicodeDataError::UnknownName);
+//!         }
+//!         Ok(code[0])
+//!     }
+//! }
+//!
+//! let gil = Python::acquire_gil();
+//! let py = gil.python();
+//!
+//! let capi: &unicode_name_CAPI = unsafe {
+//!     retrieve_capsule(
+//!         py,
+//!         CStr::from_bytes_with_nul_unchecked(b"unicodedata.ucnhash_CAPI\0"),
+//!     )
+//! }
+//! .unwrap();
+//!
+//! assert_eq!(capi.get_name(32).unwrap().to_str(), Ok("SPACE"));
+//! assert_eq!(capi.get_name(0), Err(UnicodeDataError::InvalidCode));
+//!
+//! assert_eq!(
+//!     capi.get_code(CStr::from_bytes_with_nul(b"COMMA\0").unwrap()),
+//!     Ok(44)
+//! );
+//! assert_eq!(
+//!     capi.get_code(CStr::from_bytes_with_nul(b"\0").unwrap()),
+//!     Err(UnicodeDataError::UnknownName)
+//! );
+//! ```
 use super::{PyErr, PyObject, PyResult, Python};
 use ffi::PyCapsule_Import;
 use std::ffi::CStr;
@@ -21,6 +127,16 @@ macro_rules! py_capsule {
     )
 }
 
+/// Retrieve the contents of a capsule data as a reference.
+///
+/// The retrieved data would typically be an array of static data and/or function pointers.
+/// This method doesn't work for function pointers.
+///
+/// This is very unsafe, because
+/// - nothing guarantees that the `T` type is appropriate for the data referenced by the capsule
+///   pointer
+/// - the returned lifetime doesn't guarantee either to cover the actual lifetime of the data
+///   (although capsule data is usually static)
 pub unsafe fn retrieve_capsule<'a, T>(py: Python, name: &CStr) -> PyResult<&'a T> {
     let from_caps = PyCapsule_Import(name.as_ptr(), 0);
     if from_caps.is_null() {
