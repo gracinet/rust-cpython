@@ -14,7 +14,7 @@ pub struct PyCapsule(PyObject);
 pyobject_newtype!(PyCapsule, PyCapsule_CheckExact, PyCapsule_Type);
 
 #[macro_export]
-macro_rules! py_capsule {
+macro_rules! py_capsule_fn {
     ($($capsmod:ident).+, $capsname:ident, $retrieve:ident, $sig:ty) => (
         unsafe fn $retrieve(py: $crate::Python) -> $crate::PyResult<$sig> {
             let caps_name =
@@ -22,11 +22,7 @@ macro_rules! py_capsule {
                     concat!($( stringify!($capsmod), "."),*,
                             stringify!($capsname),
                             "\0").as_bytes());
-            let from_caps = $crate::_detail::ffi::PyCapsule_Import(caps_name.as_ptr(), 0);
-            if from_caps.is_null() {
-                return Err($crate::PyErr::fetch(py));
-            }
-            Ok(::std::mem::transmute(from_caps))
+            Ok(::std::mem::transmute($crate::PyCapsule::import(py, caps_name)?))
         }
     )
 }
@@ -187,15 +183,50 @@ macro_rules! py_capsule {
 /// # fn add(a: c_int, b: c_int) -> c_int {
 /// #     a + b
 /// # }
-/// # const data: CapsData = CapsData{value: 1, fun: add};
+/// # const DATA: CapsData = CapsData{value: 1, fun: add};
 /// py_module_initializer!(somemod, initsomemod, PyInit_somemod, |py, m| {
 ///   m.add(py, "__doc__", "A module holding a capsule")?;
-///   m.add(py, "capsdata", PyCapsule::new_data(py, &mut data, "somemod.capsdata").unwrap())?;
+///   m.add(py, "capsdata", PyCapsule::new_data(py, &mut DATA, "somemod.capsdata").unwrap())?;
 ///   Ok(())
 /// });
 /// ```
 /// Another Rust extension could then declare `CapsData` and use `PyCapsule::import_data` to
 /// fetch it back.
+///
+/// ## Retrieving a function pointer capsule
+///
+/// There is in the Python library no capsule enclosing a function pointer directly,
+/// although the documentation presents it as a valid use-case. For this example, we'll
+/// therefore have to create one, and to set it in an existing module (not to imply that
+/// a true extension should follow that example and set capsules in modules they don't
+/// define!)
+///
+/// ```
+/// #[macro_use] extern crate cpython;
+/// extern crate libc;
+/// use cpython::{PyCapsule, Python, FromPyObject};
+/// use libc::{c_int, c_void};
+///
+/// type CapsFn = extern "C" fn(a: c_int) -> c_int;
+///
+/// extern "C" fn inc(a: c_int) -> c_int {
+///     a + 1
+/// }
+///
+/// {
+///     let gil = Python::acquire_gil();
+///     let py = gil.python();
+///     let pymod = py.import("sys").unwrap();
+///     let caps = PyCapsule::new(py, inc as *mut c_void, "sys.capsfn").unwrap();
+///     pymod.add(py, "capsfn", caps).unwrap();
+/// }
+///
+/// let gil = Python::acquire_gil();
+/// let py = gil.python();
+/// py_capsule_fn!(sys, capsfn, retrieve_fun, CapsFn);
+/// let fun = unsafe { retrieve_fun(py).unwrap() };
+/// assert_eq!(fun(1), 2)
+/// ```
 impl PyCapsule {
     /// Retrieve the contents of a capsule pointing to some data as a reference.
     ///
@@ -242,10 +273,18 @@ impl PyCapsule {
 
     /// Creates a new capsule from a raw void pointer
     ///
-    /// This is suitable in particular to store a function pointer in a capsule
-    /// thanks to `mem::transmute`, This actually one of the legitimate uses
-    /// of `mem::transmute`, provided that function and data pointers have the same
-    /// size, see details about this the documentation of the Rust standard library.
+    /// This is suitable in particular to store a function pointer in a capsule. These
+    /// can be obtained simply by a simple cast:
+    ///
+    /// ```
+    /// extern crate libc;
+    /// use libc::c_void;
+    ///
+    /// extern "C" fn inc(a: i32) -> i32 {
+    ///     a + 1
+    /// }
+    /// let ptr = inc as *mut c_void;
+    /// ```
     ///
     /// # Errors
     /// This method returns `NulError` if `name` contains a 0 byte (see also `CString::new`)
