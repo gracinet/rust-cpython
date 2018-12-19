@@ -15,14 +15,17 @@ pyobject_newtype!(PyCapsule, PyCapsule_CheckExact, PyCapsule_Type);
 
 #[macro_export]
 macro_rules! py_capsule_fn {
-    ($($capsmod:ident).+, $capsname:ident, $retrieve:ident, $sig:ty) => (
-        unsafe fn $retrieve(py: $crate::Python) -> $crate::PyResult<$sig> {
-            let caps_name =
-                std::ffi::CStr::from_bytes_with_nul_unchecked(
-                    concat!($( stringify!($capsmod), "."),*,
-                            stringify!($capsname),
-                            "\0").as_bytes());
-            Ok(::std::mem::transmute($crate::PyCapsule::import(py, caps_name)?))
+    ($($capsmod:ident).+, $capsname:ident, $typefn:ident, $retrievefn:ident, $( $sig: tt)* ) => (
+        type $typefn = unsafe extern "C" fn $( $sig )*;
+        fn $retrievefn(py: $crate::Python) -> $crate::PyResult<$typefn> {
+            unsafe {
+                let caps_name =
+                    std::ffi::CStr::from_bytes_with_nul_unchecked(
+                        concat!($( stringify!($capsmod), "."),*,
+                                stringify!($capsname),
+                                "\0").as_bytes());
+                Ok(::std::mem::transmute($crate::PyCapsule::import(py, caps_name)?))
+            }
         }
     )
 }
@@ -207,7 +210,6 @@ macro_rules! py_capsule_fn {
 /// use cpython::{PyCapsule, Python, FromPyObject};
 /// use libc::{c_int, c_void};
 ///
-/// type CapsFn = extern "C" fn(a: c_int) -> c_int;
 ///
 /// extern "C" fn inc(a: c_int) -> c_int {
 ///     a + 1
@@ -223,9 +225,13 @@ macro_rules! py_capsule_fn {
 ///
 /// let gil = Python::acquire_gil();
 /// let py = gil.python();
-/// py_capsule_fn!(sys, capsfn, retrieve_fun, CapsFn);
-/// let fun = unsafe { retrieve_fun(py).unwrap() };
-/// assert_eq!(fun(1), 2)
+/// py_capsule_fn!(sys, capsfn, CapsFn, retrieve_fun, (a: c_int) -> c_int);
+/// let fun = retrieve_fun(py).unwrap();
+/// assert_eq!( unsafe { fun(1) }, 2);
+///
+/// // the function type alias is available for further use if needed
+/// let mut g: Option<CapsFn> = None;
+/// g = Some(fun);
 /// ```
 impl PyCapsule {
     /// Retrieve the contents of a capsule pointing to some data as a reference.
