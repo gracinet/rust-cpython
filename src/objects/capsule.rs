@@ -6,8 +6,7 @@ use ffi::{PyCapsule_GetPointer, PyCapsule_Import, PyCapsule_New};
 use libc::c_void;
 use python::{Python, ToPythonPointer};
 use std::ffi::{CStr, CString, NulError};
-use std::mem::transmute;
-use std::ptr::null_mut;
+use std::mem;
 
 /// Represents a Python capsule object.
 pub struct PyCapsule(PyObject);
@@ -160,11 +159,11 @@ macro_rules! py_capsule {
 ///     a + b
 /// }
 ///
-/// const data: CapsData = CapsData{value: 1, fun: add};
+/// const DATA: CapsData = CapsData{value: 1, fun: add};
 ///
 /// let gil = Python::acquire_gil();
 /// let py = gil.python();
-/// let caps = PyCapsule::new_data(py, &mut data, "somemod.capsdata").unwrap();
+/// let caps = PyCapsule::new_data(py, &mut DATA, "somemod.capsdata").unwrap();
 ///
 /// let retrieved: &CapsData = unsafe {caps.data_ref("somemod.capsdata")}.unwrap();
 /// assert_eq!(retrieved.value, 1);
@@ -255,12 +254,17 @@ impl PyCapsule {
         pointer: *mut c_void,
         name: impl Into<Vec<u8>>,
     ) -> Result<Self, NulError> {
-        unsafe {
+        let name = CString::new(name)?;
+        let caps = unsafe {
             Ok(err::cast_from_owned_ptr_or_panic(
                 py,
-                PyCapsule_New(pointer, CString::new(name)?.as_ptr(), None),
+                PyCapsule_New(pointer, name.as_ptr(), None),
             ))
-        }
+        };
+        // it is required that the capsule name outlives the call as a char*
+        // TODO implement a proper PyCapsule_Destructor to release it properly
+        mem::forget(name);
+        caps
     }
 
     /// Returns a reference to the capsule data.
