@@ -6,18 +6,18 @@
 //! In particular, capsules can be very useful to start adding Rust extensions besides
 //! existing traditional C ones, be it for gradual rewrites or to extend with new functionality.
 //!
-//! This module allows to retrieve a capsule data, for consumption from Rust.
-//!
 //! # Example
 //! This retrieves and use one of the simplest capsules in the Python standard library, found in
-//! the `unicodedata` module.
+//! the `unicodedata` module. The C API enclosed in this capsule is the same for all Python
+//! versions supported by this crate. This is not the case of all capsules from the standard
+//! library. For instance the `struct` referenced by `datetime.datetime_CAPI` gets a new member
+//! in version 3.7.
 //!
 //! ```
 //! #[macro_use] extern crate cpython;
 //! extern crate libc;
 //!
-//! use cpython::capsule::retrieve_capsule;
-//! use cpython::Python;
+//! use cpython::{Python, PyCapsule};
 //! use libc::{c_char, c_int};
 //! use std::ffi::{c_void, CStr, CString};
 //! use std::mem;
@@ -55,7 +55,6 @@
 //!     InvalidCode,
 //!     UnknownName,
 //! }
-
 //! impl unicode_name_CAPI {
 //!     pub fn get_name(&self, code: Py_UCS4) -> Result<CString, UnicodeDataError> {
 //!         let mut buf: Vec<c_char> = Vec::with_capacity(UNICODE_NAME_MAXLEN);
@@ -85,7 +84,7 @@
 //! let py = gil.python();
 //!
 //! let capi: &unicode_name_CAPI = unsafe {
-//!     retrieve_capsule(
+//!     PyCapsule::import_data(
 //!         py,
 //!         CStr::from_bytes_with_nul_unchecked(b"unicodedata.ucnhash_CAPI\0"),
 //!     )
@@ -104,10 +103,15 @@
 //!     Err(UnicodeDataError::UnknownName)
 //! );
 //! ```
-use super::{PyErr, PyObject, PyResult, Python};
+use super::object::PyObject;
+use err::{PyErr, PyResult};
 use ffi::PyCapsule_Import;
+use python::Python;
 use std::ffi::CStr;
 use std::mem::transmute;
+
+/// Represents a Python capsule object.
+pub struct PyCapsule(PyObject);
 
 #[macro_export]
 macro_rules! py_capsule {
@@ -127,20 +131,22 @@ macro_rules! py_capsule {
     )
 }
 
-/// Retrieve the contents of a capsule data as a reference.
-///
-/// The retrieved data would typically be an array of static data and/or function pointers.
-/// This method doesn't work for function pointers.
-///
-/// This is very unsafe, because
-/// - nothing guarantees that the `T` type is appropriate for the data referenced by the capsule
-///   pointer
-/// - the returned lifetime doesn't guarantee either to cover the actual lifetime of the data
-///   (although capsule data is usually static)
-pub unsafe fn retrieve_capsule<'a, T>(py: Python, name: &CStr) -> PyResult<&'a T> {
-    let from_caps = PyCapsule_Import(name.as_ptr(), 0);
-    if from_caps.is_null() {
-        return Err(PyErr::fetch(py));
+impl PyCapsule {
+    /// Retrieve the contents of a capsule pointing to some data as a reference.
+    ///
+    /// The retrieved data would typically be an array of static data and/or function pointers.
+    /// This method doesn't work for standalone function pointers.
+    ///
+    /// This is very unsafe, because
+    /// - nothing guarantees that the `T` type is appropriate for the data referenced by the capsule
+    ///   pointer
+    /// - the returned lifetime doesn't guarantee either to cover the actual lifetime of the data
+    ///   (although capsule data is usually static)
+    pub unsafe fn import_data<'a, T>(py: Python, name: &CStr) -> PyResult<&'a T> {
+        let from_caps = PyCapsule_Import(name.as_ptr(), 0);
+        if from_caps.is_null() {
+            return Err(PyErr::fetch(py));
+        }
+        Ok(&*(from_caps as *const T))
     }
-    Ok(&*(from_caps as *const T))
 }

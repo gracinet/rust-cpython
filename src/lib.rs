@@ -215,7 +215,6 @@ mod objects;
 mod python;
 mod pythonrun;
 //pub mod rustobject;
-pub mod capsule;
 pub mod py_class;
 
 /// Private re-exports for macros. Do not use.
