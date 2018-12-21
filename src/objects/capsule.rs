@@ -15,16 +15,19 @@ pyobject_newtype!(PyCapsule, PyCapsule_CheckExact, PyCapsule_Type);
 
 #[macro_export]
 macro_rules! py_capsule_fn {
-    ($($capsmod:ident).+, $capsname:ident, $typefn:ident, $retrievefn:ident, $( $sig: tt)* ) => (
-        type $typefn = unsafe extern "C" fn $( $sig )*;
-        fn $retrievefn(py: $crate::Python) -> $crate::PyResult<$typefn> {
-            unsafe {
-                let caps_name =
-                    std::ffi::CStr::from_bytes_with_nul_unchecked(
-                        concat!($( stringify!($capsmod), "."),*,
-                                stringify!($capsname),
-                                "\0").as_bytes());
-                Ok(::std::mem::transmute($crate::PyCapsule::import(py, caps_name)?))
+    ($($capsmod:ident).+, $capsname:ident, $rustmod:ident, $( $sig: tt)* ) => (
+        mod $rustmod {
+            use super::*;
+            pub type CapsFn = unsafe extern "C" fn $( $sig )*;
+            pub fn import(py: $crate::Python) -> $crate::PyResult<CapsFn> {
+                unsafe {
+                    let caps_name =
+                        std::ffi::CStr::from_bytes_with_nul_unchecked(
+                            concat!($( stringify!($capsmod), "."),*,
+                                    stringify!($capsname),
+                                    "\0").as_bytes());
+                    Ok(::std::mem::transmute($crate::PyCapsule::import(py, caps_name)?))
+                }
             }
         }
     )
@@ -210,28 +213,42 @@ macro_rules! py_capsule_fn {
 /// use cpython::{PyCapsule, Python, FromPyObject};
 /// use libc::{c_int, c_void};
 ///
-///
 /// extern "C" fn inc(a: c_int) -> c_int {
 ///     a + 1
 /// }
 ///
-/// {
+/// /// for testing purposes, stores a capsule named `sys.capsfn`` pointing to `inc()`.
+/// fn create_capsule() {
 ///     let gil = Python::acquire_gil();
 ///     let py = gil.python();
 ///     let pymod = py.import("sys").unwrap();
 ///     let caps = PyCapsule::new(py, inc as *mut c_void, "sys.capsfn").unwrap();
 ///     pymod.add(py, "capsfn", caps).unwrap();
+///  }
+///
+/// py_capsule_fn!(sys, capsfn, capsmod, (a: c_int) -> c_int);
+/// // we now have a `capsmod` Rust module, that defines
+/// // - `CapsFn`: type for the target function
+/// // - `import(py: Python) -> PyResult<CapsFn>`: to fetch the encapsulated function
+///
+/// // One could, e.g., reexport if needed:
+/// pub use capsmod::CapsFn;
+///
+/// fn retrieve_use_capsule() {
+///     let gil = Python::acquire_gil();
+///     let py = gil.python();
+///     let fun = capsmod::import(py).unwrap();
+///     assert_eq!( unsafe { fun(1) }, 2);
+///
+///     // let's demonstrate the (reexported) function type
+///     let mut g: Option<CapsFn> = None;
+///     g = Some(fun);
 /// }
 ///
-/// let gil = Python::acquire_gil();
-/// let py = gil.python();
-/// py_capsule_fn!(sys, capsfn, CapsFn, retrieve_fun, (a: c_int) -> c_int);
-/// let fun = retrieve_fun(py).unwrap();
-/// assert_eq!( unsafe { fun(1) }, 2);
-///
-/// // the function type alias is available for further use if needed
-/// let mut g: Option<CapsFn> = None;
-/// g = Some(fun);
+/// fn main() {
+///     create_capsule();
+///     retrieve_use_capsule();
+/// }
 /// ```
 impl PyCapsule {
     /// Retrieve the contents of a capsule pointing to some data as a reference.
