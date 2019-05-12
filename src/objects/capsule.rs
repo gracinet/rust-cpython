@@ -199,10 +199,16 @@ pyobject_newtype!(PyCapsule, PyCapsule_CheckExact, PyCapsule_Type);
 /// # Usage
 ///
 /// ```ignore
-///   py_capsule!(from some.python.module import capsulename as rustmodule for CapsuleStruct)
+///   py_capsule!(from some.python.module import capsulename as rustmodule for CapsuleStruct);
 /// ```
 ///
 /// where `CapsuleStruct` is the above mentioned `struct` defined by the caller.
+///
+/// There's a shorter variant in which `CapsuleStruct` defaults to `capsulename`:
+///
+/// ```ignore
+///   py_capsule!(from some.python.module import capsulename as rustmodule);
+/// ```
 ///
 /// The macro defines a Rust module named `rustmodule`, as specified by the caller.
 /// This module provides a retrieval function with the following signature:
@@ -292,6 +298,12 @@ pyobject_newtype!(PyCapsule, PyCapsule_CheckExact, PyCapsule_Type);
 /// }
 ///
 /// py_capsule!(from unicodedata import ucnhash_CAPI as capsmod for unicode_name_CAPI);
+/// type ucnhash_CAPI = uncicode_name_CAPI;
+/// py_capsule!(from unicodedata import ucnhash_CAPI as capsmod2);
+///
+/// // or, using the variant where the `struct` and the capsule have the same name:
+/// type ucnhash_CAPI = unicode_name_CAPI;
+/// py_capsule!(from unicodedata import ucnhash_CAPI as capsmod2);
 ///
 /// fn main() {
 ///     let gil = Python::acquire_gil();
@@ -304,13 +316,32 @@ pyobject_newtype!(PyCapsule, PyCapsule_CheckExact, PyCapsule_Type);
 ///     assert_eq!(capi.get_code(CStr::from_bytes_with_nul(b"COMMA\0").unwrap()), Ok(44));
 ///     assert_eq!(capi.get_code(CStr::from_bytes_with_nul(b"\0").unwrap()),
 ///                Err(UnicodeDataError::UnknownName));
+///
+///     // let's check that the variant with the defaulting struct name works
+///     let capi2 = unsafe { capsmod2::retrieve(py).unwrap() };
+///     assert_eq!(capi2.get_name(38).unwrap().to_str(), Ok("AMPERSAND"));
 /// }
 /// ```
 /// [`PyCapsule`]: struct.PyCapsule.html
 /// [`PyCapsule::import_data`]: struct.PyCapsule.html#method.import_data
 #[macro_export]
 macro_rules! py_capsule {
-    (from $($capsmod:ident).+ import $capsname:ident as $rustmod:ident for $ruststruct: ident ) => (
+    (from $($capsmod:ident).+ import $capsname:ident as $rustmod:ident) => (
+        py_capsule_data!(from $($capsmod).+ import $capsname as $rustmod for $capsname);
+    );
+    (from $($capsmod:ident).+ import $capsname:ident as $rustmod:ident for $ruststruct: ident )
+        => (
+            py_capsule_data!(from $($capsmod).+ import $capsname as $rustmod for $ruststruct);
+        );
+    (from $($capsmod:ident).+ import fn $capsname:ident $( $sig:tt )+ )
+        => (
+            py_capsule_fn!(from $($capsmod).+ import $capsname as $capsname signature $( $sig )+);
+        );
+}
+
+#[macro_export]
+macro_rules! py_capsule_data {
+      (from $($capsmod:ident).+ import $capsname:ident as $rustmod:ident for $ruststruct: ident ) => (
         mod $rustmod {
             use super::*;
             use std::sync::Once;
@@ -389,19 +420,19 @@ macro_rules! py_capsule {
 ///     let gil = Python::acquire_gil();
 ///     let py = gil.python();
 ///     let pymod = py.import("sys").unwrap();
-///     let caps = PyCapsule::new(py, inc as *mut c_void, "sys.capsfn").unwrap();
-///     pymod.add(py, "capsfn", caps).unwrap();
+///     let caps = PyCapsule::new(py, inc as *mut c_void, "sys.caps").unwrap();
+///     pymod.add(py, "caps", caps).unwrap();
 ///  }
 ///
-/// py_capsule_fn!(from sys import capsfn as capsmod: fn(a: c_int) -> c_int);
+/// py_capsule!(from sys import fn caps(a: c_int) -> c_int);
 ///
 /// // One could, e.g., reexport if needed:
-/// pub use capsmod::CapsuleFn;
+/// pub use caps::CapsuleFn;
 ///
 /// fn retrieve_use_capsule() {
 ///     let gil = Python::acquire_gil();
 ///     let py = gil.python();
-///     let fun = capsmod::retrieve(py).unwrap();
+///     let fun = caps::retrieve(py).unwrap();
 ///     assert_eq!( unsafe { fun(1) }, 2);
 ///
 ///     // let's demonstrate the (reexported) function type
@@ -418,7 +449,7 @@ macro_rules! py_capsule {
 /// [`PyCapsule`]: struct.PyCapsule.html
 #[macro_export]
 macro_rules! py_capsule_fn {
-    (from $($capsmod:ident).+ import $capsname:ident as $rustmod:ident : fn$( $sig: tt)* ) => (
+    (from $($capsmod:ident).+ import $capsname:ident as $rustmod:ident signature $( $sig: tt)* ) => (
         mod $rustmod {
             use super::*;
             use std::sync::Once;
