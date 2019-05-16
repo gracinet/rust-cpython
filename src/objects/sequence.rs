@@ -18,12 +18,12 @@
 
 use std::mem;
 use ffi;
-use python::{Python, PythonObject, ToPythonPointer, PyClone, PyDrop};
+use crate::python::{Python, PythonObject, ToPythonPointer, PyClone, PyDrop};
 use conversion::{FromPyObject, ToPyObject};
-use objects::{PyObject, PyList, PyTuple, PyIterator};
+use crate::objects::{PyObject, PyList, PyTuple, PyIterator};
 use ffi::Py_ssize_t;
-use err;
-use err::{PyErr, PyResult, result_from_owned_ptr, result_cast_from_owned_ptr};
+use crate::err;
+use crate::err::{PyErr, PyResult, result_from_owned_ptr, result_cast_from_owned_ptr};
 use buffer;
 
 /// Represents a reference to a python object supporting the sequence protocol.
@@ -263,9 +263,9 @@ fn extract_sequence<T>(py: Python, obj: &PyObject) -> PyResult<Vec<T>>
 #[cfg(test)]
 mod test {
     use std;
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
-    use objects::{PySequence, PyList, PyTuple, PyIterator};
+    use crate::objects::{PySequence, PyList, PyTuple, PyIterator};
 
     #[test]
     fn test_numbers_are_not_sequences() {

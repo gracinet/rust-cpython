@@ -20,10 +20,10 @@ use std::{mem, slice, cell};
 use std::ffi::CStr;
 use ffi;
 use libc;
-use err::{self, PyResult};
+use crate::err::{self, PyResult};
 use exc;
-use python::{Python, PyDrop};
-use objects::PyObject;
+use crate::python::{Python, PyDrop};
+use crate::objects::PyObject;
 
 /// Allows access to the underlying buffer used by a python object such as `bytes`, `bytearray` or `array.array`.
 pub struct PyBuffer(Box<ffi::Py_buffer>); // use Box<> because Python expects that the Py_buffer struct has a stable memory address
@@ -567,9 +567,9 @@ impl_element!(f64, Float);
 #[cfg(test)]
 mod test {
     use std;
-    use python::{Python, PythonObject, PyDrop};
+    use crate::python::{Python, PythonObject, PyDrop};
     use conversion::ToPyObject;
-    use objects::{PySequence, PyList, PyTuple, PyIterator};
+    use crate::objects::{PySequence, PyList, PyTuple, PyIterator};
     use objectprotocol::ObjectProtocol;
     use super::PyBuffer;
 

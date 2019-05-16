@@ -17,10 +17,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 use ffi;
-use python::{Python, PythonObject};
+use crate::python::{Python, PythonObject};
 use conversion::ToPyObject;
-use objects::PyObject;
-use err::{self, PyResult, PyErr};
+use crate::objects::PyObject;
+use crate::err::{self, PyResult, PyErr};
 use std::{mem, collections, hash, cmp, ptr};
 
 /// Represents a Python `set`.
@@ -141,9 +141,9 @@ impl <V> ToPyObject for collections::BTreeSet<V>
 
 #[cfg(test)]
 mod test {
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
-    use objects::PySet;
+    use crate::objects::PySet;
     use std::collections::{HashSet, BTreeSet};
 
     #[test]

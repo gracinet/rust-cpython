@@ -27,9 +27,9 @@ pub mod gc;
 
 use libc;
 use std::{mem, ptr, cell};
-use python::{self, Python, PythonObject};
-use objects::{PyObject, PyType, PyModule};
-use err::{self, PyResult};
+use crate::python::{self, Python, PythonObject};
+use crate::objects::{PyObject, PyType, PyModule};
+use crate::err::{self, PyResult};
 use ffi;
 
 // TODO: consider moving CompareOp to a different module, so that it isn't exported via two paths

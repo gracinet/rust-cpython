@@ -1,5 +1,5 @@
 use libc::{c_char, c_int};
-use pythonrun::*;
+use crate::pythonrun::*;
 use code::*;
 use pyarena::PyArena;
 

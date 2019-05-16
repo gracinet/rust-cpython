@@ -56,7 +56,7 @@ pub use pystate::*;
 
 pub use pyarena::*;
 pub use modsupport::*;
-pub use pythonrun::*;
+pub use crate::pythonrun::*;
 pub use ceval::*;
 pub use sysmodule::*;
 #[cfg(Py_3_6)] pub use osmodule::*;

@@ -19,8 +19,8 @@
 use libc;
 use ffi;
 use std::mem;
-use python::{Python, PythonObject, PyDrop, ToPythonPointer};
-use objects::PyObject;
+use crate::python::{Python, PythonObject, PyDrop, ToPythonPointer};
+use crate::objects::PyObject;
 use function::AbortOnDrop;
 
 // TODO: what's the semantics of the traverse return code?

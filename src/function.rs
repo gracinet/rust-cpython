@@ -20,11 +20,11 @@ use libc;
 use std::{mem, ptr, io, any, marker};
 use std::panic;
 use std::ffi::{CString, CStr};
-use python::{Python, PythonObject, PyDrop};
-use objects::{PyObject, PyTuple, PyDict, PyString, exc};
+use crate::python::{Python, PythonObject, PyDrop};
+use crate::objects::{PyObject, PyTuple, PyDict, PyString, exc};
 use conversion::ToPyObject;
 use ffi;
-use err::{self, PyResult};
+use crate::err::{self, PyResult};
 
 #[macro_export]
 #[doc(hidden)]

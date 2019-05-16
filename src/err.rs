@@ -17,11 +17,11 @@
 // DEALINGS IN THE SOFTWARE.
 
 use std;
-use python::{PythonObject, ToPythonPointer, Python, PythonObjectDowncastError,
+use crate::python::{PythonObject, ToPythonPointer, Python, PythonObjectDowncastError,
         PythonObjectWithTypeObject, PyClone, PyDrop};
-use objects::{PyObject, PyType, exc};
+use crate::objects::{PyObject, PyType, exc};
 #[cfg(feature="python27-sys")]
-use objects::oldstyle::PyClass;
+use crate::objects::oldstyle::PyClass;
 use ffi;
 use libc;
 use std::ptr;
@@ -472,7 +472,7 @@ macro_rules! _cpython__err__stringify {
 #[cfg(test)]
 mod tests {
     use {Python, PyErr};
-    use objects::exc;
+    use crate::objects::exc;
 
     #[test]
     fn set_typeerror() {

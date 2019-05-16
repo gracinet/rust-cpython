@@ -16,10 +16,10 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-use python::{Python, PythonObject, ToPythonPointer};
+use crate::python::{Python, PythonObject, ToPythonPointer};
 use conversion::ToPyObject;
-use objects::{PyObject, PyTuple, PyDict};
-use err::{PyResult, result_from_owned_ptr};
+use crate::objects::{PyObject, PyTuple, PyDict};
+use crate::err::{PyResult, result_from_owned_ptr};
 use ffi;
 use std::ffi::CStr;
 use std::borrow::Cow;

@@ -22,8 +22,8 @@ use libc::c_char;
 use std::{self, mem, ops};
 use std::ffi::CStr;
 use ffi;
-use python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PythonObjectDowncastError, PythonObjectWithTypeObject};
-use err::{self, PyResult};
+use crate::python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PythonObjectDowncastError, PythonObjectWithTypeObject};
+use crate::err::{self, PyResult};
 use super::object::PyObject;
 use super::typeobject::PyType;
 

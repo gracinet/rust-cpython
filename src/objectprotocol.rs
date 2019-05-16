@@ -20,10 +20,10 @@ use std::fmt;
 use std::cmp::Ordering;
 use ffi;
 use libc;
-use python::{Python, PythonObject, ToPythonPointer};
-use objects::{PyObject, PyTuple, PyDict, PyString};
+use crate::python::{Python, PythonObject, ToPythonPointer};
+use crate::objects::{PyObject, PyTuple, PyDict, PyString};
 use conversion::ToPyObject;
-use err::{PyErr, PyResult, self};
+use crate::err::{PyErr, PyResult, self};
 
 /// Trait that contains methods
 pub trait ObjectProtocol : PythonObject {
@@ -324,9 +324,9 @@ impl fmt::Display for PyObject {
 #[cfg(test)]
 mod test {
     use std;
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
-    use objects::{PyList, PyTuple};
+    use crate::objects::{PyList, PyTuple};
     use super::ObjectProtocol;
 
     #[test]

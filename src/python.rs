@@ -21,9 +21,9 @@ use std::ffi::CString;
 use std::marker::PhantomData;
 use libc::c_int;
 use ffi;
-use objects::{PyObject, PyType, PyBool, PyDict, PyModule};
-use err::{self, PyErr, PyResult};
-use pythonrun::GILGuard;
+use crate::objects::{PyObject, PyType, PyBool, PyDict, PyModule};
+use crate::err::{self, PyErr, PyResult};
+use crate::pythonrun::GILGuard;
 
 /// Marker type that indicates that the GIL is currently held.
 ///

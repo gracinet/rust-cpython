@@ -18,7 +18,7 @@
 
 use std::{sync, rc, marker};
 use ffi;
-use python::Python;
+use crate::python::Python;
 
 static START: sync::Once = sync::ONCE_INIT;
 

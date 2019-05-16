@@ -46,7 +46,7 @@ pub use warnings::*;
 pub use weakrefobject::*;
 pub use pyarena::*;
 pub use modsupport::*;
-pub use pythonrun::*;
+pub use crate::pythonrun::*;
 pub use ceval::*;
 pub use sysmodule::*;
 pub use import::*;

@@ -97,10 +97,10 @@ extern crate python27_sys as ffi;
 extern crate python3_sys as ffi;
 
 pub use ffi::Py_ssize_t;
-pub use err::{PyErr, PyResult};
-pub use objects::*;
-pub use python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PythonObjectDowncastError, PythonObjectWithTypeObject, PyClone, PyDrop};
-pub use pythonrun::{GILGuard, GILProtected, prepare_freethreaded_python};
+pub use crate::err::{PyErr, PyResult};
+pub use crate::objects::*;
+pub use crate::python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PythonObjectDowncastError, PythonObjectWithTypeObject, PyClone, PyDrop};
+pub use crate::pythonrun::{GILGuard, GILProtected, prepare_freethreaded_python};
 pub use conversion::{FromPyObject, RefFromPyObject, ToPyObject};
 pub use py_class::{CompareOp};
 pub use objectprotocol::{ObjectProtocol};
@@ -205,7 +205,7 @@ pub mod _detail {
     pub mod libc {
         pub use crate::libc::{c_char, c_void, c_int};
     }
-    pub use err::{from_owned_ptr_or_panic, result_from_owned_ptr};
+    pub use crate::err::{from_owned_ptr_or_panic, result_from_owned_ptr};
     pub use function::{handle_callback, py_fn_impl, AbortOnDrop,
         PyObjectCallbackConverter, PythonObjectCallbackConverter};
 }

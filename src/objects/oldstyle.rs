@@ -19,9 +19,9 @@
 //! This module contains support for old-style classes. Only available in Python 2.x.
 
 use ffi;
-use python::{Python, PythonObject, ToPythonPointer};
+use crate::python::{Python, PythonObject, ToPythonPointer};
 use conversion::ToPyObject;
-use err::{self, PyResult};
+use crate::err::{self, PyResult};
 use super::object::PyObject;
 use super::tuple::PyTuple;
 use super::dict::PyDict;

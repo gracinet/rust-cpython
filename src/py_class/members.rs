@@ -17,10 +17,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 use std::marker;
-use python::{Python, PythonObject};
+use crate::python::{Python, PythonObject};
 use conversion::ToPyObject;
-use objects::PyObject;
-use err::{self, PyResult};
+use crate::objects::PyObject;
+use crate::err::{self, PyResult};
 use ffi;
 
 /// Represents something that can be added as a member to a Python class/type.

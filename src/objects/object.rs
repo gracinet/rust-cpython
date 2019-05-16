@@ -18,9 +18,9 @@
 
 use std::{mem, ptr};
 use ffi;
-use python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PythonObjectWithTypeObject, PythonObjectDowncastError};
-use objects::PyType;
-use err::PyResult;
+use crate::python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PythonObjectWithTypeObject, PythonObjectDowncastError};
+use crate::objects::PyType;
+use crate::err::PyResult;
 
 /// Represents a reference to a Python object.
 ///

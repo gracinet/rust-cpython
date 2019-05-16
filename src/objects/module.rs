@@ -19,12 +19,12 @@
 use std;
 use ffi;
 use libc::c_char;
-use python::{Python, PythonObject, PyDrop};
+use crate::python::{Python, PythonObject, PyDrop};
 use objectprotocol::ObjectProtocol;
 use conversion::ToPyObject;
-use objects::{PyObject, PyTuple, PyDict, exc};
+use crate::objects::{PyObject, PyTuple, PyDict, exc};
 use py_class::PythonObjectFromPyClassMacro;
-use err::{self, PyResult, PyErr};
+use crate::err::{self, PyResult, PyErr};
 use std::ffi::{CStr, CString};
 
 /// Represents a Python module object.

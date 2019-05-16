@@ -21,9 +21,9 @@ use std::{mem, str, char};
 use std::borrow::Cow;
 use libc::c_char;
 use ffi;
-use python::{Python, PythonObject, PyClone, ToPythonPointer, PythonObjectDowncastError};
+use crate::python::{Python, PythonObject, PyClone, ToPythonPointer, PythonObjectDowncastError};
 use super::{exc, PyObject};
-use err::{self, PyResult, PyErr};
+use crate::err::{self, PyResult, PyErr};
 use conversion::{FromPyObject, RefFromPyObject, ToPyObject};
 
 /// Represents a Python string.
@@ -468,7 +468,7 @@ impl RefFromPyObject for [u8] {
 
 #[cfg(test)]
 mod test {
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::{ToPyObject, RefFromPyObject};
 
     #[test]

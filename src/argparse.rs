@@ -20,11 +20,11 @@
 //! See also the macros `py_argparse!`, `py_fn!` and `py_method!`.
 
 use std::ptr;
-use python::{Python, PythonObject};
-use objects::{PyObject, PyTuple, PyDict, PyString, exc};
+use crate::python::{Python, PythonObject};
+use crate::objects::{PyObject, PyTuple, PyDict, PyString, exc};
 use conversion::{RefFromPyObject, ToPyObject};
 use ffi;
-use err::{self, PyResult};
+use crate::err::{self, PyResult};
 
 /// Description of a python parameter; used for `parse_args()`.
 pub struct ParamDescription<'a> {
@@ -446,8 +446,8 @@ pub fn with_extracted_or_default<P: ?Sized, R, F>(py: Python, obj: Option<&PyObj
 
 #[cfg(test)]
 mod test {
-    use python::{Python, PythonObject};
-    use objects::PyTuple;
+    use crate::python::{Python, PythonObject};
+    use crate::objects::PyTuple;
     use conversion::ToPyObject;
 
     #[test]

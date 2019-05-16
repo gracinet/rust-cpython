@@ -16,8 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-use python::{Python, PythonObject, ToPythonPointer, PyDrop};
-use err::{self, PyErr, PyResult};
+use crate::python::{Python, PythonObject, ToPythonPointer, PyDrop};
+use crate::err::{self, PyErr, PyResult};
 use super::object::PyObject;
 use super::exc;
 use ffi::{self, Py_ssize_t};
@@ -183,7 +183,7 @@ extract!(obj to NoArgs; py => {
 
 #[cfg(test)]
 mod test {
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
 
     #[test]

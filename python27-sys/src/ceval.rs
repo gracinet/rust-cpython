@@ -3,7 +3,7 @@ use pyport::Py_ssize_t;
 use object::PyObject;
 use frameobject::PyFrameObject;
 use pystate::{PyThreadState, Py_tracefunc};
-use pythonrun::PyCompilerFlags;
+use crate::pythonrun::PyCompilerFlags;
 
 #[cfg_attr(windows, link(name="pythonXY"))] extern "C" {
     pub fn PyEval_CallObjectWithKeywords(callable: *mut PyObject,

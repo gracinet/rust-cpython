@@ -17,10 +17,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 use ffi;
-use python::{Python, PythonObject};
+use crate::python::{Python, PythonObject};
 use conversion::ToPyObject;
-use objects::{PyObject, PyList};
-use err::{self, PyResult, PyErr};
+use crate::objects::{PyObject, PyList};
+use crate::err::{self, PyResult, PyErr};
 use std::{mem, collections, hash, cmp};
 
 /// Represents a Python `dict`.
@@ -159,9 +159,9 @@ impl <K, V> ToPyObject for collections::BTreeMap<K, V>
 
 #[cfg(test)]
 mod test {
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
-    use objects::{PyDict, PyTuple};
+    use crate::objects::{PyDict, PyTuple};
     use std::collections::HashMap;
 
     #[test]

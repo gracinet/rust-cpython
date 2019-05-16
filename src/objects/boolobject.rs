@@ -1,6 +1,6 @@
 use ffi;
-use python::Python;
-use err::PyResult;
+use crate::python::Python;
+use crate::err::PyResult;
 use super::PyObject;
 use conversion::{ToPyObject};
 
@@ -50,7 +50,7 @@ extract!(obj to bool; py => {
 
 #[cfg(test)]
 mod test {
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
 
     #[test]

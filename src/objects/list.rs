@@ -16,8 +16,8 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-use python::{Python, PythonObject, ToPythonPointer, PyClone, PyDrop};
-use err::{self, PyErr, PyResult};
+use crate::python::{Python, PythonObject, ToPythonPointer, PyClone, PyDrop};
+use crate::err::{self, PyErr, PyResult};
 use super::object::PyObject;
 use ffi::{self, Py_ssize_t};
 use conversion::{ToPyObject, FromPyObject};
@@ -145,9 +145,9 @@ impl <T> ToPyObject for Vec<T> where T: ToPyObject {
 
 #[cfg(test)]
 mod test {
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
-    use objects::PyList;
+    use crate::objects::PyList;
 
     #[test]
     fn test_len() {

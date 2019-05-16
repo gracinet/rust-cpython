@@ -16,10 +16,10 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-use python::{Python, PythonObject, ToPythonPointer, PythonObjectDowncastError};
+use crate::python::{Python, PythonObject, ToPythonPointer, PythonObjectDowncastError};
 use conversion::ToPyObject;
-use objects::PyObject;
-use err::{PyErr, PyResult};
+use crate::objects::PyObject;
+use crate::err::{PyErr, PyResult};
 use ffi;
 
 /// A python iterator object.
@@ -79,7 +79,7 @@ impl <'p> Iterator for PyIterator<'p> {
 
 #[cfg(test)]
 mod tests {
-    use python::{Python, PythonObject};
+    use crate::python::{Python, PythonObject};
     use conversion::ToPyObject;
     use objectprotocol::ObjectProtocol;
 

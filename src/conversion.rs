@@ -18,9 +18,9 @@
 
 use std;
 use ffi;
-use python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PyDrop, PyClone};
-use objects::PyObject;
-use err::PyResult;
+use crate::python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PyDrop, PyClone};
+use crate::objects::PyObject;
+use crate::err::PyResult;
 
 /// Conversion trait that allows various objects to be converted into Python objects.
 pub trait ToPyObject {
