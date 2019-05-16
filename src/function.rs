@@ -147,7 +147,7 @@ pub unsafe fn py_fn_impl(py: Python, method_def: *mut ffi::PyMethodDef) -> PyObj
 pub trait CallbackConverter<S> {
     type R;
 
-    fn convert(S, Python) -> Self::R;
+    fn convert(val: S, py: Python) -> Self::R;
     fn error_value() -> Self::R;
 }
 

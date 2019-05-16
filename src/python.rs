@@ -48,11 +48,11 @@ pub trait PythonObject : crate::conversion::ToPyObject + Send + Sized + 'static 
 
     /// Unchecked downcast from PyObject to Self.
     /// Undefined behavior if the input object does not have the expected type.
-    unsafe fn unchecked_downcast_from(PyObject) -> Self;
+    unsafe fn unchecked_downcast_from(obj: PyObject) -> Self;
 
     /// Unchecked downcast from PyObject to Self.
     /// Undefined behavior if the input object does not have the expected type.
-    unsafe fn unchecked_downcast_borrow_from(&PyObject) -> &Self;
+    unsafe fn unchecked_downcast_borrow_from(obj: &PyObject) -> &Self;
 }
 
 // Marker type that indicates an error while downcasting
@@ -61,20 +61,20 @@ pub struct PythonObjectDowncastError<'p>(pub Python<'p>);
 /// Trait implemented by Python object types that allow a checked downcast.
 pub trait PythonObjectWithCheckedDowncast : PythonObject {
     /// Cast from PyObject to a concrete Python object type.
-    fn downcast_from<'p>(Python<'p>, PyObject) -> Result<Self, PythonObjectDowncastError<'p>>;
+    fn downcast_from<'p>(py: Python<'p>, obj: PyObject) -> Result<Self, PythonObjectDowncastError<'p>>;
 
     /// Cast from PyObject to a concrete Python object type.
-    fn downcast_borrow_from<'a, 'p>(Python<'p>, &'a PyObject) -> Result<&'a Self, PythonObjectDowncastError<'p>>;
+    fn downcast_borrow_from<'a, 'p>(py: Python<'p>, obj: &'a PyObject) -> Result<&'a Self, PythonObjectDowncastError<'p>>;
 }
 
 /// Trait implemented by Python object types that have a corresponding type object.
 pub trait PythonObjectWithTypeObject : PythonObjectWithCheckedDowncast {
     /// Retrieves the type object for this Python object type.
-    fn type_object(Python) -> PyType;
+    fn type_object(py: Python) -> PyType;
 }
 
 pub trait PyClone : Sized {
-    fn clone_ref(&self, Python) -> Self;
+    fn clone_ref(&self, py: Python) -> Self;
 }
 
 impl <T> PyClone for T where T: PythonObject {
@@ -98,7 +98,7 @@ impl <T> PyClone for Option<T> where T: PyClone {
 }
 
 pub trait PyDrop : Sized {
-    fn release_ref(self, Python);
+    fn release_ref(self, py: Python);
 }
 
 impl <T> PyDrop for T where T: PythonObject {
