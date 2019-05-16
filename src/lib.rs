@@ -101,9 +101,9 @@ pub use crate::err::{PyErr, PyResult};
 pub use crate::objects::*;
 pub use crate::python::{Python, PythonObject, PythonObjectWithCheckedDowncast, PythonObjectDowncastError, PythonObjectWithTypeObject, PyClone, PyDrop};
 pub use crate::pythonrun::{GILGuard, GILProtected, prepare_freethreaded_python};
-pub use conversion::{FromPyObject, RefFromPyObject, ToPyObject};
-pub use py_class::{CompareOp};
-pub use objectprotocol::{ObjectProtocol};
+pub use crate::conversion::{FromPyObject, RefFromPyObject, ToPyObject};
+pub use crate::py_class::{CompareOp};
+pub use crate::objectprotocol::{ObjectProtocol};
 
 #[cfg(feature="python27-sys")]
 #[allow(non_camel_case_types)]

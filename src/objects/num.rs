@@ -25,7 +25,7 @@ use crate::err::{self, PyResult, PyErr};
 use super::object::PyObject;
 use super::exc;
 use ffi;
-use conversion::{ToPyObject, FromPyObject};
+use crate::conversion::{ToPyObject, FromPyObject};
 
 /// Represents a Python `int` object.
 ///
@@ -305,7 +305,7 @@ extract!(obj to f32; py => {
 mod test {
     use std;
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
 
     macro_rules! num_to_py_object_and_back (
         ($func_name:ident, $t1:ty, $t2:ty) => (

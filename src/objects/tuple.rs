@@ -21,7 +21,7 @@ use crate::err::{self, PyErr, PyResult};
 use super::object::PyObject;
 use super::exc;
 use ffi::{self, Py_ssize_t};
-use conversion::{FromPyObject, ToPyObject};
+use crate::conversion::{FromPyObject, ToPyObject};
 use std::slice;
 
 /// Represents a Python tuple object.
@@ -184,7 +184,7 @@ extract!(obj to NoArgs; py => {
 #[cfg(test)]
 mod test {
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
 
     #[test]
     fn test_len() {

@@ -20,7 +20,7 @@
 
 use ffi;
 use crate::python::{Python, PythonObject, ToPythonPointer};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::err::{self, PyResult};
 use super::object::PyObject;
 use super::tuple::PyTuple;

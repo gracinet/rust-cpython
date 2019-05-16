@@ -20,10 +20,10 @@ use std;
 use ffi;
 use libc::c_char;
 use crate::python::{Python, PythonObject, PyDrop};
-use objectprotocol::ObjectProtocol;
-use conversion::ToPyObject;
+use crate::objectprotocol::ObjectProtocol;
+use crate::conversion::ToPyObject;
 use crate::objects::{PyObject, PyTuple, PyDict, exc};
-use py_class::PythonObjectFromPyClassMacro;
+use crate::py_class::PythonObjectFromPyClassMacro;
 use crate::err::{self, PyResult, PyErr};
 use std::ffi::{CStr, CString};
 

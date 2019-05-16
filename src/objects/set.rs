@@ -18,7 +18,7 @@
 
 use ffi;
 use crate::python::{Python, PythonObject};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::objects::PyObject;
 use crate::err::{self, PyResult, PyErr};
 use std::{mem, collections, hash, cmp, ptr};
@@ -142,7 +142,7 @@ impl <V> ToPyObject for collections::BTreeSet<V>
 #[cfg(test)]
 mod test {
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
     use crate::objects::PySet;
     use std::collections::{HashSet, BTreeSet};
 

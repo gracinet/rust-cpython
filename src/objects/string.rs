@@ -24,7 +24,7 @@ use ffi;
 use crate::python::{Python, PythonObject, PyClone, ToPythonPointer, PythonObjectDowncastError};
 use super::{exc, PyObject};
 use crate::err::{self, PyResult, PyErr};
-use conversion::{FromPyObject, RefFromPyObject, ToPyObject};
+use crate::conversion::{FromPyObject, RefFromPyObject, ToPyObject};
 
 /// Represents a Python string.
 /// Corresponds to `basestring` in Python 2, and `str` in Python 3.
@@ -469,7 +469,7 @@ impl RefFromPyObject for [u8] {
 #[cfg(test)]
 mod test {
     use crate::python::{Python, PythonObject};
-    use conversion::{ToPyObject, RefFromPyObject};
+    use crate::conversion::{ToPyObject, RefFromPyObject};
 
     #[test]
     fn test_non_bmp() {

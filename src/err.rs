@@ -26,7 +26,7 @@ use ffi;
 use libc;
 use std::ptr;
 use libc::c_char;
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use std::ffi::CString;
 
 /**

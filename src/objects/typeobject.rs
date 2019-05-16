@@ -17,7 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 use crate::python::{Python, PythonObject, ToPythonPointer};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::objects::{PyObject, PyTuple, PyDict};
 use crate::err::{PyResult, result_from_owned_ptr};
 use ffi;

@@ -568,9 +568,9 @@ impl_element!(f64, Float);
 mod test {
     use std;
     use crate::python::{Python, PythonObject, PyDrop};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
     use crate::objects::{PySequence, PyList, PyTuple, PyIterator};
-    use objectprotocol::ObjectProtocol;
+    use crate::objectprotocol::ObjectProtocol;
     use super::PyBuffer;
 
     #[test]

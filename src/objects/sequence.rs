@@ -19,7 +19,7 @@
 use std::mem;
 use ffi;
 use crate::python::{Python, PythonObject, ToPythonPointer, PyClone, PyDrop};
-use conversion::{FromPyObject, ToPyObject};
+use crate::conversion::{FromPyObject, ToPyObject};
 use crate::objects::{PyObject, PyList, PyTuple, PyIterator};
 use ffi::Py_ssize_t;
 use crate::err;
@@ -204,7 +204,7 @@ impl PySequence {
 
     #[inline]
     pub fn iter<'p>(&self, py: Python<'p>) -> PyResult<PyIterator<'p>> {
-        use objectprotocol::ObjectProtocol;
+        use crate::objectprotocol::ObjectProtocol;
         self.as_object().iter(py)
     }
 }
@@ -264,7 +264,7 @@ fn extract_sequence<T>(py: Python, obj: &PyObject) -> PyResult<Vec<T>>
 mod test {
     use std;
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
     use crate::objects::{PySequence, PyList, PyTuple, PyIterator};
 
     #[test]

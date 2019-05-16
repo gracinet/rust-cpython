@@ -20,7 +20,7 @@ use crate::python::{Python, PythonObject, ToPythonPointer, PyClone, PyDrop};
 use crate::err::{self, PyErr, PyResult};
 use super::object::PyObject;
 use ffi::{self, Py_ssize_t};
-use conversion::{ToPyObject, FromPyObject};
+use crate::conversion::{ToPyObject, FromPyObject};
 
 /// Represents a Python `list`.
 pub struct PyList(PyObject);
@@ -146,7 +146,7 @@ impl <T> ToPyObject for Vec<T> where T: ToPyObject {
 #[cfg(test)]
 mod test {
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
     use crate::objects::PyList;
 
     #[test]

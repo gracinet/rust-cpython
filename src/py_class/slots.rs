@@ -21,11 +21,11 @@ use std::{mem, isize, ptr};
 use std::ffi::CString;
 use libc::{c_char, c_int};
 use crate::python::{Python, PythonObject};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::objects::PyObject;
 use function::CallbackConverter;
 use crate::err::{PyErr, PyResult};
-use py_class::{CompareOp};
+use crate::py_class::{CompareOp};
 use exc;
 use Py_hash_t;
 

@@ -18,7 +18,7 @@
 
 use ffi;
 use crate::python::{Python, PythonObject};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::objects::{PyObject, PyList};
 use crate::err::{self, PyResult, PyErr};
 use std::{mem, collections, hash, cmp};
@@ -160,7 +160,7 @@ impl <K, V> ToPyObject for collections::BTreeMap<K, V>
 #[cfg(test)]
 mod test {
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
     use crate::objects::{PyDict, PyTuple};
     use std::collections::HashMap;
 

@@ -17,7 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 use crate::python::{Python, PythonObject, ToPythonPointer, PythonObjectDowncastError};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::objects::PyObject;
 use crate::err::{PyErr, PyResult};
 use ffi;
@@ -80,8 +80,8 @@ impl <'p> Iterator for PyIterator<'p> {
 #[cfg(test)]
 mod tests {
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
-    use objectprotocol::ObjectProtocol;
+    use crate::conversion::ToPyObject;
+    use crate::objectprotocol::ObjectProtocol;
 
     #[test]
     fn vec_iter() {

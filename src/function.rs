@@ -22,7 +22,7 @@ use std::panic;
 use std::ffi::{CString, CStr};
 use crate::python::{Python, PythonObject, PyDrop};
 use crate::objects::{PyObject, PyTuple, PyDict, PyString, exc};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use ffi;
 use crate::err::{self, PyResult};
 

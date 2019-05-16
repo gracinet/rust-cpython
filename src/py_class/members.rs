@@ -18,7 +18,7 @@
 
 use std::marker;
 use crate::python::{Python, PythonObject};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::objects::PyObject;
 use crate::err::{self, PyResult};
 use ffi;

@@ -22,7 +22,7 @@
 use std::ptr;
 use crate::python::{Python, PythonObject};
 use crate::objects::{PyObject, PyTuple, PyDict, PyString, exc};
-use conversion::{RefFromPyObject, ToPyObject};
+use crate::conversion::{RefFromPyObject, ToPyObject};
 use ffi;
 use crate::err::{self, PyResult};
 
@@ -448,7 +448,7 @@ pub fn with_extracted_or_default<P: ?Sized, R, F>(py: Python, obj: Option<&PyObj
 mod test {
     use crate::python::{Python, PythonObject};
     use crate::objects::PyTuple;
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
 
     #[test]
     pub fn test_parse() {

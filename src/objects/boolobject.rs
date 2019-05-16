@@ -2,7 +2,7 @@ use ffi;
 use crate::python::Python;
 use crate::err::PyResult;
 use super::PyObject;
-use conversion::{ToPyObject};
+use crate::conversion::{ToPyObject};
 
 /// Represents a Python `bool`.
 pub struct PyBool(PyObject);
@@ -51,7 +51,7 @@ extract!(obj to bool; py => {
 #[cfg(test)]
 mod test {
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
 
     #[test]
     fn test_true() {

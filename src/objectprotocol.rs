@@ -22,7 +22,7 @@ use ffi;
 use libc;
 use crate::python::{Python, PythonObject, ToPythonPointer};
 use crate::objects::{PyObject, PyTuple, PyDict, PyString};
-use conversion::ToPyObject;
+use crate::conversion::ToPyObject;
 use crate::err::{PyErr, PyResult, self};
 
 /// Trait that contains methods
@@ -325,7 +325,7 @@ impl fmt::Display for PyObject {
 mod test {
     use std;
     use crate::python::{Python, PythonObject};
-    use conversion::ToPyObject;
+    use crate::conversion::ToPyObject;
     use crate::objects::{PyList, PyTuple};
     use super::ObjectProtocol;
 
