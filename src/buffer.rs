@@ -21,7 +21,7 @@ use std::ffi::CStr;
 use ffi;
 use libc;
 use crate::err::{self, PyResult};
-use exc;
+use crate::exc;
 use crate::python::{Python, PyDrop};
 use crate::objects::PyObject;
 

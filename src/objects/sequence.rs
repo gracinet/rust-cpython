@@ -24,7 +24,7 @@ use crate::objects::{PyObject, PyList, PyTuple, PyIterator};
 use ffi::Py_ssize_t;
 use crate::err;
 use crate::err::{PyErr, PyResult, result_from_owned_ptr, result_cast_from_owned_ptr};
-use buffer;
+use crate::buffer;
 
 /// Represents a reference to a python object supporting the sequence protocol.
 pub struct PySequence(PyObject);

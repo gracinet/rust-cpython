@@ -311,7 +311,7 @@ impl <'p> std::fmt::Debug for PythonObjectDowncastError<'p> {
 
 #[cfg(test)]
 mod test {
-    use {Python, PyDict};
+    use super::{Python, PyDict};
 
     #[test]
     fn test_eval() {

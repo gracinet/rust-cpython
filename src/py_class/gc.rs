@@ -21,7 +21,7 @@ use ffi;
 use std::mem;
 use crate::python::{Python, PythonObject, PyDrop, ToPythonPointer};
 use crate::objects::PyObject;
-use function::AbortOnDrop;
+use crate::function::AbortOnDrop;
 
 // TODO: what's the semantics of the traverse return code?
 // If it's just a normal python exception, we might want to use PyErr instead.

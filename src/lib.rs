@@ -206,7 +206,7 @@ pub mod _detail {
         pub use crate::libc::{c_char, c_void, c_int};
     }
     pub use crate::err::{from_owned_ptr_or_panic, result_from_owned_ptr};
-    pub use function::{handle_callback, py_fn_impl, AbortOnDrop,
+    pub use crate::function::{handle_callback, py_fn_impl, AbortOnDrop,
         PyObjectCallbackConverter, PythonObjectCallbackConverter};
 }
 

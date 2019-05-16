@@ -471,7 +471,7 @@ macro_rules! _cpython__err__stringify {
 
 #[cfg(test)]
 mod tests {
-    use {Python, PyErr};
+    use crate::{Python, PyErr};
     use crate::objects::exc;
 
     #[test]

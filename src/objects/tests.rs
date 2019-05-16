@@ -16,7 +16,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-use {Python, PyDict, ToPyObject, PyInt};
+use crate::{Python, PyDict, ToPyObject, PyInt};
 use std::collections::{BTreeMap, HashMap};
 
 // TODO: move these tests into the dict module

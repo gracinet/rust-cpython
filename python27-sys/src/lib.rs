@@ -17,7 +17,7 @@ pub use floatobject::*;
 pub use complexobject::*;
 pub use rangeobject::*;
 pub use memoryobject::*;
-pub use bufferobject::*;
+pub use crate::bufferobject::*;
 pub use stringobject::*;
 pub use bytesobject::*;
 pub use bytearrayobject::*;

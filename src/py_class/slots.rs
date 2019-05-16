@@ -23,11 +23,11 @@ use libc::{c_char, c_int};
 use crate::python::{Python, PythonObject};
 use crate::conversion::ToPyObject;
 use crate::objects::PyObject;
-use function::CallbackConverter;
+use crate::function::CallbackConverter;
 use crate::err::{PyErr, PyResult};
 use crate::py_class::{CompareOp};
-use exc;
-use Py_hash_t;
+use crate::exc;
+use crate::Py_hash_t;
 
 #[macro_export(local_inner_macros)]
 #[doc(hidden)]
