@@ -82,6 +82,6 @@ pub unsafe fn PyCode_Check(op : *mut PyObject) -> c_int {
 
 #[inline]
 pub unsafe fn PyCode_GetNumFree(op : *mut PyCodeObject) -> Py_ssize_t {
-    ::tupleobject::PyTuple_GET_SIZE((*op).co_freevars)
+    crate::tupleobject::PyTuple_GET_SIZE((*op).co_freevars)
 }
 

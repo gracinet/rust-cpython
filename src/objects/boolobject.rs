@@ -19,7 +19,7 @@ impl PyBool {
     /// Gets whether this boolean is `true`.
     #[inline]
     pub fn is_true(&self) -> bool {
-        self.0.as_ptr() == unsafe { ::ffi::Py_True() }
+        self.0.as_ptr() == unsafe { crate::ffi::Py_True() }
     }
 }
 

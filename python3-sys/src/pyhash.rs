@@ -15,7 +15,7 @@ impl Clone for PyHash_FuncDef {
     #[inline] fn clone(&self) -> Self { *self }
 }
 impl Default for PyHash_FuncDef {
-    #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+    #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
 }
 
 #[cfg_attr(windows, link(name="pythonXY"))] extern "C" {

@@ -71,11 +71,11 @@ macro_rules! py_class_type_object_flags {
 }
 
 #[cfg(feature="python27-sys")]
-pub const TPFLAGS_DEFAULT : ::libc::c_long = ffi::Py_TPFLAGS_DEFAULT
+pub const TPFLAGS_DEFAULT : crate::libc::c_long = ffi::Py_TPFLAGS_DEFAULT
                                            | ffi::Py_TPFLAGS_CHECKTYPES;
 
 #[cfg(feature="python3-sys")]
-pub const TPFLAGS_DEFAULT : ::libc::c_ulong = ffi::Py_TPFLAGS_DEFAULT;
+pub const TPFLAGS_DEFAULT : crate::libc::c_ulong = ffi::Py_TPFLAGS_DEFAULT;
 
 #[macro_export(local_inner_macros)]
 #[doc(hidden)]
@@ -114,7 +114,7 @@ pub fn build_tp_name(module_name: Option<&str>, type_name: &str) -> *mut c_char 
 pub unsafe extern "C" fn tp_dealloc_callback<T>(obj: *mut ffi::PyObject)
     where T: super::BaseObject
 {
-    let guard = ::function::AbortOnDrop("Cannot unwind out of tp_dealloc");
+    let guard = crate::function::AbortOnDrop("Cannot unwind out of tp_dealloc");
     let py = Python::assume_gil_acquired();
     let r = T::dealloc(py, obj);
     mem::forget(guard);

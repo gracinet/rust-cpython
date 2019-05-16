@@ -11,7 +11,7 @@ use pystate::PyThreadState;
 
 #[inline]
 pub unsafe fn PyEval_CallObject(callable: *mut PyObject, arg: *mut PyObject) -> *mut PyObject {
-    PyEval_CallObjectWithKeywords(callable, arg, ::core::ptr::null_mut())
+    PyEval_CallObjectWithKeywords(callable, arg, crate::core::ptr::null_mut())
 }
 
 #[cfg_attr(windows, link(name="pythonXY"))] extern "C" {
@@ -25,7 +25,7 @@ pub unsafe fn PyEval_CallObject(callable: *mut PyObject, arg: *mut PyObject) -> 
     pub fn PyEval_GetBuiltins() -> *mut PyObject;
     pub fn PyEval_GetGlobals() -> *mut PyObject;
     pub fn PyEval_GetLocals() -> *mut PyObject;
-    pub fn PyEval_GetFrame() -> *mut ::PyFrameObject;
+    pub fn PyEval_GetFrame() -> *mut crate::PyFrameObject;
     pub fn Py_AddPendingCall(func: Option<extern "C" fn(arg1: *mut c_void) -> c_int>,
                              arg: *mut c_void) -> c_int;
     pub fn Py_MakePendingCalls() -> c_int;
@@ -44,8 +44,8 @@ pub unsafe fn PyEval_CallObject(callable: *mut PyObject, arg: *mut PyObject) -> 
     pub fn PyEval_GetFuncDesc(arg1: *mut PyObject) -> *const c_char;
 	#[cfg(not(Py_3_7))]
     pub fn PyEval_GetCallStats(arg1: *mut PyObject) -> *mut PyObject;
-    pub fn PyEval_EvalFrame(arg1: *mut ::PyFrameObject) -> *mut PyObject;
-    pub fn PyEval_EvalFrameEx(f: *mut ::PyFrameObject, exc: c_int)
+    pub fn PyEval_EvalFrame(arg1: *mut crate::PyFrameObject) -> *mut PyObject;
+    pub fn PyEval_EvalFrameEx(f: *mut crate::PyFrameObject, exc: c_int)
      -> *mut PyObject;
     pub fn PyEval_SaveThread() -> *mut PyThreadState;
     pub fn PyEval_RestoreThread(arg1: *mut PyThreadState) -> ();

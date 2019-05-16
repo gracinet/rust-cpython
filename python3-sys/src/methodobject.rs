@@ -20,14 +20,14 @@ pub type PyCFunction =
 pub type _PyCFunctionFast =
     unsafe extern "C" fn
                               (slf: *mut PyObject, args: *mut *mut PyObject,
-                               nargs: ::pyport::Py_ssize_t, kwnames: *mut PyObject)
+                               nargs: crate::pyport::Py_ssize_t, kwnames: *mut PyObject)
                               -> *mut PyObject;
 
 #[cfg(all(Py_3_7, not(Py_LIMITED_API)))]
 pub type _PyCFunctionFast =
     unsafe extern "C" fn(
         slf: *mut PyObject,
-        args: *const *mut PyObject, nargs: ::pyport::Py_ssize_t
+        args: *const *mut PyObject, nargs: crate::pyport::Py_ssize_t
     ) -> *mut PyObject;
 
 pub type PyCFunctionWithKeywords =
@@ -39,7 +39,7 @@ pub type PyCFunctionWithKeywords =
 pub type _PyCFunctionFastWithKeywords =
     unsafe extern "C" fn(
         slf: *mut PyObject,
-        args: *const *mut PyObject, nargs: ::pyport::Py_ssize_t,
+        args: *const *mut PyObject, nargs: crate::pyport::Py_ssize_t,
         kwnames: *mut PyObject
     ) -> *mut PyObject;
 

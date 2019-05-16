@@ -119,7 +119,7 @@ pub trait ObjectProtocol : PythonObject {
             } else if result < 0 {
                 return Err(PyErr::fetch(py));
             }
-            return Err(PyErr::new::<::exc::TypeError, _>(py, "ObjectProtocol::compare(): All comparisons returned false"));
+            return Err(PyErr::new::<crate::exc::TypeError, _>(py, "ObjectProtocol::compare(): All comparisons returned false"));
         }
 
         other.with_borrowed_ptr(py, |other| unsafe {
@@ -136,7 +136,7 @@ pub trait ObjectProtocol : PythonObject {
     ///   * CompareOp::Le: `self <= other`
     ///   * CompareOp::Gt: `self > other`
     ///   * CompareOp::Ge: `self >= other`
-    fn rich_compare<O>(&self, py: Python, other: O, compare_op: ::CompareOp) -> PyResult<PyObject> where O: ToPyObject {
+    fn rich_compare<O>(&self, py: Python, other: O, compare_op: crate::CompareOp) -> PyResult<PyObject> where O: ToPyObject {
         other.with_borrowed_ptr(py, |other| unsafe {
             err::result_cast_from_owned_ptr(py, ffi::PyObject_RichCompare(self.as_ptr(), other, compare_op as libc::c_int))
         })
@@ -164,7 +164,7 @@ pub trait ObjectProtocol : PythonObject {
     /// This is equivalent to the Python expression 'unistr(self)'.
     #[inline]
     #[cfg(feature="python27-sys")]
-    fn unistr(&self, py: Python) -> PyResult<::objects::PyUnicode> {
+    fn unistr(&self, py: Python) -> PyResult<crate::objects::PyUnicode> {
         unsafe {
             err::result_cast_from_owned_ptr(py, ffi::PyObject_Unicode(self.as_ptr()))
         }
@@ -224,7 +224,7 @@ pub trait ObjectProtocol : PythonObject {
     /// Retrieves the hash code of the object.
     /// This is equivalent to the Python expression: 'hash(self)'
     #[inline]
-    fn hash(&self, py: Python) -> PyResult<::Py_hash_t> {
+    fn hash(&self, py: Python) -> PyResult<crate::Py_hash_t> {
         let v = unsafe { ffi::PyObject_Hash(self.as_ptr()) };
         if v == -1 {
             Err(PyErr::fetch(py))
@@ -291,11 +291,11 @@ pub trait ObjectProtocol : PythonObject {
     /// This is typically a new iterator but if the argument
     /// is an iterator, this returns itself.
     #[inline]
-    fn iter<'p>(&self, py: Python<'p>) -> PyResult<::objects::PyIterator<'p>> {
+    fn iter<'p>(&self, py: Python<'p>) -> PyResult<crate::objects::PyIterator<'p>> {
         let obj = unsafe {
             err::result_from_owned_ptr(py, ffi::PyObject_GetIter(self.as_ptr()))
         }?;
-        Ok(::objects::PyIterator::from_object(py, obj)?)
+        Ok(crate::objects::PyIterator::from_object(py, obj)?)
     }
 }
 

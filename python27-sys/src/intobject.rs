@@ -34,7 +34,7 @@ pub unsafe fn PyInt_CheckExact(op : *mut PyObject) -> c_int {
                             pend: *mut *mut c_char,
                             base: c_int) -> *mut PyObject;
     #[cfg(py_sys_config="Py_USING_UNICODE")]
-    pub fn PyInt_FromUnicode(u: *mut ::unicodeobject::Py_UNICODE, length: Py_ssize_t,
+    pub fn PyInt_FromUnicode(u: *mut crate::unicodeobject::Py_UNICODE, length: Py_ssize_t,
                              base: c_int) -> *mut PyObject;
     pub fn PyInt_FromLong(ival: c_long) -> *mut PyObject;
     pub fn PyInt_FromSize_t(ival: size_t) -> *mut PyObject;

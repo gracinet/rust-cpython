@@ -233,9 +233,9 @@ impl PyObject {
     /// This is a wrapper function around `FromPyObject::from_py_object()`.
     #[inline]
     pub fn extract<'a, T>(&'a self, py: Python) -> PyResult<T>
-        where T: ::conversion::FromPyObject<'a>
+        where T: crate::conversion::FromPyObject<'a>
     {
-        ::conversion::FromPyObject::extract(py, self)
+        crate::conversion::FromPyObject::extract(py, self)
     }
 }
 

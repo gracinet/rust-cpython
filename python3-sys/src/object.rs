@@ -95,7 +95,7 @@ mod bufferinfo {
     #[derive(Copy)]
     pub struct Py_buffer {
         pub buf: *mut c_void,
-        pub obj: *mut ::object::PyObject,
+        pub obj: *mut crate::object::PyObject,
         pub len: Py_ssize_t,
         pub itemsize: Py_ssize_t,
         pub readonly: c_int,
@@ -110,16 +110,16 @@ mod bufferinfo {
         #[inline] fn clone(&self) -> Self { *self }
     }
     impl Default for Py_buffer {
-        #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+        #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
     }
 
     pub type getbufferproc =
-        extern "C" fn(arg1: *mut ::object::PyObject,
+        extern "C" fn(arg1: *mut crate::object::PyObject,
                                             arg2: *mut Py_buffer,
                                             arg3: c_int)
                                   -> c_int;
     pub type releasebufferproc =
-        extern "C" fn(arg1: *mut ::object::PyObject,
+        extern "C" fn(arg1: *mut crate::object::PyObject,
                                             arg2: *mut Py_buffer) -> ();
 
     /// Maximum number of dimensions
@@ -176,7 +176,7 @@ pub type destructor =
     unsafe extern "C" fn(arg1: *mut PyObject);
 #[cfg(not(Py_LIMITED_API))]
 pub type printfunc =
-    unsafe extern "C" fn(arg1: *mut PyObject, arg2: *mut ::libc::FILE, arg3: c_int) -> c_int;
+    unsafe extern "C" fn(arg1: *mut PyObject, arg2: *mut crate::libc::FILE, arg3: c_int) -> c_int;
 pub type getattrfunc =
     unsafe extern "C" fn
                               (arg1: *mut PyObject, arg2: *mut c_char)
@@ -242,50 +242,50 @@ mod typeobject {
     #[repr(C)]
     #[derive(Copy)]
     pub struct PyNumberMethods {
-        pub nb_add: Option<::object::binaryfunc>,
-        pub nb_subtract: Option<::object::binaryfunc>,
-        pub nb_multiply: Option<::object::binaryfunc>,
-        pub nb_remainder: Option<::object::binaryfunc>,
-        pub nb_divmod: Option<::object::binaryfunc>,
-        pub nb_power: Option<::object::ternaryfunc>,
-        pub nb_negative: Option<::object::unaryfunc>,
-        pub nb_positive: Option<::object::unaryfunc>,
-        pub nb_absolute: Option<::object::unaryfunc>,
-        pub nb_bool: Option<::object::inquiry>,
-        pub nb_invert: Option<::object::unaryfunc>,
-        pub nb_lshift: Option<::object::binaryfunc>,
-        pub nb_rshift: Option<::object::binaryfunc>,
-        pub nb_and: Option<::object::binaryfunc>,
-        pub nb_xor: Option<::object::binaryfunc>,
-        pub nb_or: Option<::object::binaryfunc>,
-        pub nb_int: Option<::object::unaryfunc>,
+        pub nb_add: Option<crate::object::binaryfunc>,
+        pub nb_subtract: Option<crate::object::binaryfunc>,
+        pub nb_multiply: Option<crate::object::binaryfunc>,
+        pub nb_remainder: Option<crate::object::binaryfunc>,
+        pub nb_divmod: Option<crate::object::binaryfunc>,
+        pub nb_power: Option<crate::object::ternaryfunc>,
+        pub nb_negative: Option<crate::object::unaryfunc>,
+        pub nb_positive: Option<crate::object::unaryfunc>,
+        pub nb_absolute: Option<crate::object::unaryfunc>,
+        pub nb_bool: Option<crate::object::inquiry>,
+        pub nb_invert: Option<crate::object::unaryfunc>,
+        pub nb_lshift: Option<crate::object::binaryfunc>,
+        pub nb_rshift: Option<crate::object::binaryfunc>,
+        pub nb_and: Option<crate::object::binaryfunc>,
+        pub nb_xor: Option<crate::object::binaryfunc>,
+        pub nb_or: Option<crate::object::binaryfunc>,
+        pub nb_int: Option<crate::object::unaryfunc>,
         pub nb_reserved: *mut c_void,
-        pub nb_float: Option<::object::unaryfunc>,
-        pub nb_inplace_add: Option<::object::binaryfunc>,
-        pub nb_inplace_subtract: Option<::object::binaryfunc>,
-        pub nb_inplace_multiply: Option<::object::binaryfunc>,
-        pub nb_inplace_remainder: Option<::object::binaryfunc>,
-        pub nb_inplace_power: Option<::object::ternaryfunc>,
-        pub nb_inplace_lshift: Option<::object::binaryfunc>,
-        pub nb_inplace_rshift: Option<::object::binaryfunc>,
-        pub nb_inplace_and: Option<::object::binaryfunc>,
-        pub nb_inplace_xor: Option<::object::binaryfunc>,
-        pub nb_inplace_or: Option<::object::binaryfunc>,
-        pub nb_floor_divide: Option<::object::binaryfunc>,
-        pub nb_true_divide: Option<::object::binaryfunc>,
-        pub nb_inplace_floor_divide: Option<::object::binaryfunc>,
-        pub nb_inplace_true_divide: Option<::object::binaryfunc>,
-        pub nb_index: Option<::object::unaryfunc>,
+        pub nb_float: Option<crate::object::unaryfunc>,
+        pub nb_inplace_add: Option<crate::object::binaryfunc>,
+        pub nb_inplace_subtract: Option<crate::object::binaryfunc>,
+        pub nb_inplace_multiply: Option<crate::object::binaryfunc>,
+        pub nb_inplace_remainder: Option<crate::object::binaryfunc>,
+        pub nb_inplace_power: Option<crate::object::ternaryfunc>,
+        pub nb_inplace_lshift: Option<crate::object::binaryfunc>,
+        pub nb_inplace_rshift: Option<crate::object::binaryfunc>,
+        pub nb_inplace_and: Option<crate::object::binaryfunc>,
+        pub nb_inplace_xor: Option<crate::object::binaryfunc>,
+        pub nb_inplace_or: Option<crate::object::binaryfunc>,
+        pub nb_floor_divide: Option<crate::object::binaryfunc>,
+        pub nb_true_divide: Option<crate::object::binaryfunc>,
+        pub nb_inplace_floor_divide: Option<crate::object::binaryfunc>,
+        pub nb_inplace_true_divide: Option<crate::object::binaryfunc>,
+        pub nb_index: Option<crate::object::unaryfunc>,
         #[cfg(Py_3_5)]
-        pub nb_matrix_multiply: Option<::object::binaryfunc>,
+        pub nb_matrix_multiply: Option<crate::object::binaryfunc>,
         #[cfg(Py_3_5)]
-        pub nb_inplace_matrix_multiply: Option<::object::binaryfunc>,
+        pub nb_inplace_matrix_multiply: Option<crate::object::binaryfunc>,
     }
     impl Clone for PyNumberMethods {
         #[inline] fn clone(&self) -> Self { *self }
     }
     impl Default for PyNumberMethods {
-        #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+        #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
     }
     macro_rules! as_expr { ($e:expr) => {$e} }
 
@@ -346,22 +346,22 @@ mod typeobject {
     #[repr(C)]
     #[derive(Copy)]
     pub struct PySequenceMethods {
-        pub sq_length: Option<::object::lenfunc>,
-        pub sq_concat: Option<::object::binaryfunc>,
-        pub sq_repeat: Option<::object::ssizeargfunc>,
-        pub sq_item: Option<::object::ssizeargfunc>,
+        pub sq_length: Option<crate::object::lenfunc>,
+        pub sq_concat: Option<crate::object::binaryfunc>,
+        pub sq_repeat: Option<crate::object::ssizeargfunc>,
+        pub sq_item: Option<crate::object::ssizeargfunc>,
         pub was_sq_slice: *mut c_void,
-        pub sq_ass_item: Option<::object::ssizeobjargproc>,
+        pub sq_ass_item: Option<crate::object::ssizeobjargproc>,
         pub was_sq_ass_slice: *mut c_void,
-        pub sq_contains: Option<::object::objobjproc>,
-        pub sq_inplace_concat: Option<::object::binaryfunc>,
-        pub sq_inplace_repeat: Option<::object::ssizeargfunc>,
+        pub sq_contains: Option<crate::object::objobjproc>,
+        pub sq_inplace_concat: Option<crate::object::binaryfunc>,
+        pub sq_inplace_repeat: Option<crate::object::ssizeargfunc>,
     }
     impl Clone for PySequenceMethods {
         #[inline] fn clone(&self) -> Self { *self }
     }
     impl Default for PySequenceMethods {
-        #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+        #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
     }
     pub const PySequenceMethods_INIT : PySequenceMethods = PySequenceMethods {
         sq_length: None,
@@ -378,15 +378,15 @@ mod typeobject {
     #[repr(C)]
     #[derive(Copy)]
     pub struct PyMappingMethods {
-        pub mp_length: Option<::object::lenfunc>,
-        pub mp_subscript: Option<::object::binaryfunc>,
-        pub mp_ass_subscript: Option<::object::objobjargproc>,
+        pub mp_length: Option<crate::object::lenfunc>,
+        pub mp_subscript: Option<crate::object::binaryfunc>,
+        pub mp_ass_subscript: Option<crate::object::objobjargproc>,
     }
     impl Clone for PyMappingMethods {
         #[inline] fn clone(&self) -> Self { *self }
     }
     impl Default for PyMappingMethods {
-        #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+        #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
     }
     pub const PyMappingMethods_INIT : PyMappingMethods = PyMappingMethods {
         mp_length: None,
@@ -397,9 +397,9 @@ mod typeobject {
     #[derive(Copy)]
     #[cfg(Py_3_5)]
     pub struct PyAsyncMethods {
-        pub am_await: Option<::object::unaryfunc>,
-        pub am_aiter: Option<::object::unaryfunc>,
-        pub am_anext: Option<::object::unaryfunc>,
+        pub am_await: Option<crate::object::unaryfunc>,
+        pub am_aiter: Option<crate::object::unaryfunc>,
+        pub am_anext: Option<crate::object::unaryfunc>,
     }
     #[cfg(Py_3_5)]
     impl Clone for PyAsyncMethods {
@@ -407,7 +407,7 @@ mod typeobject {
     }
     #[cfg(Py_3_5)]
     impl Default for PyAsyncMethods {
-        #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+        #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
     }
     #[cfg(Py_3_5)]
     pub const PyAsyncMethods_INIT : PyAsyncMethods = PyAsyncMethods {
@@ -418,71 +418,71 @@ mod typeobject {
     #[repr(C)]
     #[derive(Copy)]
     pub struct PyBufferProcs {
-        pub bf_getbuffer: Option<::object::getbufferproc>,
-        pub bf_releasebuffer: Option<::object::releasebufferproc>,
+        pub bf_getbuffer: Option<crate::object::getbufferproc>,
+        pub bf_releasebuffer: Option<crate::object::releasebufferproc>,
     }
     impl Clone for PyBufferProcs {
         #[inline] fn clone(&self) -> Self { *self }
     }
     impl Default for PyBufferProcs {
-        #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+        #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
     }
 
     #[repr(C)]
     #[derive(Copy)]
     pub struct PyTypeObject {
-        pub ob_base: ::object::PyVarObject,
+        pub ob_base: crate::object::PyVarObject,
         pub tp_name: *const c_char,
         pub tp_basicsize: Py_ssize_t,
         pub tp_itemsize: Py_ssize_t,
-        pub tp_dealloc: Option<::object::destructor>,
-        pub tp_print: Option<::object::printfunc>,
-        pub tp_getattr: Option<::object::getattrfunc>,
-        pub tp_setattr: Option<::object::setattrfunc>,
+        pub tp_dealloc: Option<crate::object::destructor>,
+        pub tp_print: Option<crate::object::printfunc>,
+        pub tp_getattr: Option<crate::object::getattrfunc>,
+        pub tp_setattr: Option<crate::object::setattrfunc>,
         #[cfg(Py_3_5)]
         pub tp_as_async: *mut PyAsyncMethods,
         #[cfg(not(Py_3_5))]
         pub tp_reserved: *mut c_void,
-        pub tp_repr: Option<::object::reprfunc>,
+        pub tp_repr: Option<crate::object::reprfunc>,
         pub tp_as_number: *mut PyNumberMethods,
         pub tp_as_sequence: *mut PySequenceMethods,
         pub tp_as_mapping: *mut PyMappingMethods,
-        pub tp_hash: Option<::object::hashfunc>,
-        pub tp_call: Option<::object::ternaryfunc>,
-        pub tp_str: Option<::object::reprfunc>,
-        pub tp_getattro: Option<::object::getattrofunc>,
-        pub tp_setattro: Option<::object::setattrofunc>,
+        pub tp_hash: Option<crate::object::hashfunc>,
+        pub tp_call: Option<crate::object::ternaryfunc>,
+        pub tp_str: Option<crate::object::reprfunc>,
+        pub tp_getattro: Option<crate::object::getattrofunc>,
+        pub tp_setattro: Option<crate::object::setattrofunc>,
         pub tp_as_buffer: *mut PyBufferProcs,
         pub tp_flags: c_ulong,
         pub tp_doc: *const c_char,
-        pub tp_traverse: Option<::object::traverseproc>,
-        pub tp_clear: Option<::object::inquiry>,
-        pub tp_richcompare: Option<::object::richcmpfunc>,
+        pub tp_traverse: Option<crate::object::traverseproc>,
+        pub tp_clear: Option<crate::object::inquiry>,
+        pub tp_richcompare: Option<crate::object::richcmpfunc>,
         pub tp_weaklistoffset: Py_ssize_t,
-        pub tp_iter: Option<::object::getiterfunc>,
-        pub tp_iternext: Option<::object::iternextfunc>,
-        pub tp_methods: *mut ::methodobject::PyMethodDef,
-        pub tp_members: *mut ::structmember::PyMemberDef,
-        pub tp_getset: *mut ::descrobject::PyGetSetDef,
+        pub tp_iter: Option<crate::object::getiterfunc>,
+        pub tp_iternext: Option<crate::object::iternextfunc>,
+        pub tp_methods: *mut crate::methodobject::PyMethodDef,
+        pub tp_members: *mut crate::structmember::PyMemberDef,
+        pub tp_getset: *mut crate::descrobject::PyGetSetDef,
         pub tp_base: *mut PyTypeObject,
-        pub tp_dict: *mut ::object::PyObject,
-        pub tp_descr_get: Option<::object::descrgetfunc>,
-        pub tp_descr_set: Option<::object::descrsetfunc>,
+        pub tp_dict: *mut crate::object::PyObject,
+        pub tp_descr_get: Option<crate::object::descrgetfunc>,
+        pub tp_descr_set: Option<crate::object::descrsetfunc>,
         pub tp_dictoffset: Py_ssize_t,
-        pub tp_init: Option<::object::initproc>,
-        pub tp_alloc: Option<::object::allocfunc>,
-        pub tp_new: Option<::object::newfunc>,
-        pub tp_free: Option<::object::freefunc>,
-        pub tp_is_gc: Option<::object::inquiry>,
-        pub tp_bases: *mut ::object::PyObject,
-        pub tp_mro: *mut ::object::PyObject,
-        pub tp_cache: *mut ::object::PyObject,
-        pub tp_subclasses: *mut ::object::PyObject,
-        pub tp_weaklist: *mut ::object::PyObject,
-        pub tp_del: Option<::object::destructor>,
+        pub tp_init: Option<crate::object::initproc>,
+        pub tp_alloc: Option<crate::object::allocfunc>,
+        pub tp_new: Option<crate::object::newfunc>,
+        pub tp_free: Option<crate::object::freefunc>,
+        pub tp_is_gc: Option<crate::object::inquiry>,
+        pub tp_bases: *mut crate::object::PyObject,
+        pub tp_mro: *mut crate::object::PyObject,
+        pub tp_cache: *mut crate::object::PyObject,
+        pub tp_subclasses: *mut crate::object::PyObject,
+        pub tp_weaklist: *mut crate::object::PyObject,
+        pub tp_del: Option<crate::object::destructor>,
         pub tp_version_tag: c_uint,
         #[cfg(Py_3_4)]
-        pub tp_finalize: Option<::object::destructor>,
+        pub tp_finalize: Option<crate::object::destructor>,
         #[cfg(py_sys_config="COUNT_ALLOCS")]
         pub tp_allocs: Py_ssize_t,
         #[cfg(py_sys_config="COUNT_ALLOCS")]
@@ -502,8 +502,8 @@ mod typeobject {
         ($tp_as_async:ident, $($tail:tt)*) => {
             as_expr! {
                 PyTypeObject {
-                    ob_base: ::object::PyVarObject {
-                        ob_base: ::object::PyObject_HEAD_INIT,
+                    ob_base: crate::object::PyVarObject {
+                        ob_base: crate::object::PyObject_HEAD_INIT,
                         ob_size: 0
                     },
                     tp_name: 0 as *const c_char,
@@ -524,7 +524,7 @@ mod typeobject {
                     tp_getattro: None,
                     tp_setattro: None,
                     tp_as_buffer: 0 as *mut PyBufferProcs,
-                    tp_flags: ::object::Py_TPFLAGS_DEFAULT,
+                    tp_flags: crate::object::Py_TPFLAGS_DEFAULT,
                     tp_doc: 0 as *const c_char,
                     tp_traverse: None,
                     tp_clear: None,
@@ -532,11 +532,11 @@ mod typeobject {
                     tp_weaklistoffset: 0,
                     tp_iter: None,
                     tp_iternext: None,
-                    tp_methods: 0 as *mut ::methodobject::PyMethodDef,
-                    tp_members: 0 as *mut ::structmember::PyMemberDef,
-                    tp_getset: 0 as *mut ::descrobject::PyGetSetDef,
+                    tp_methods: 0 as *mut crate::methodobject::PyMethodDef,
+                    tp_members: 0 as *mut crate::structmember::PyMemberDef,
+                    tp_getset: 0 as *mut crate::descrobject::PyGetSetDef,
                     tp_base: 0 as *mut PyTypeObject,
-                    tp_dict: 0 as *mut ::object::PyObject,
+                    tp_dict: 0 as *mut crate::object::PyObject,
                     tp_descr_get: None,
                     tp_descr_set: None,
                     tp_dictoffset: 0,
@@ -545,11 +545,11 @@ mod typeobject {
                     tp_new: None,
                     tp_free: None,
                     tp_is_gc: None,
-                    tp_bases: 0 as *mut ::object::PyObject,
-                    tp_mro: 0 as *mut ::object::PyObject,
-                    tp_cache: 0 as *mut ::object::PyObject,
-                    tp_subclasses: 0 as *mut ::object::PyObject,
-                    tp_weaklist: 0 as *mut ::object::PyObject,
+                    tp_bases: 0 as *mut crate::object::PyObject,
+                    tp_mro: 0 as *mut crate::object::PyObject,
+                    tp_cache: 0 as *mut crate::object::PyObject,
+                    tp_subclasses: 0 as *mut crate::object::PyObject,
+                    tp_weaklist: 0 as *mut crate::object::PyObject,
                     tp_del: None,
                     tp_version_tag: 0,
                     $($tail)*
@@ -613,23 +613,23 @@ mod typeobject {
         pub as_mapping: PyMappingMethods,
         pub as_sequence: PySequenceMethods,
         pub as_buffer: PyBufferProcs,
-        pub ht_name: *mut ::object::PyObject,
-        pub ht_slots: *mut ::object::PyObject,
-        pub ht_qualname: *mut ::object::PyObject,
+        pub ht_name: *mut crate::object::PyObject,
+        pub ht_slots: *mut crate::object::PyObject,
+        pub ht_qualname: *mut crate::object::PyObject,
         pub ht_cached_keys: *mut c_void,
     }
     impl Clone for PyHeapTypeObject {
         #[inline] fn clone(&self) -> Self { *self }
     }
     impl Default for PyHeapTypeObject {
-        #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+        #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
     }
 
     #[inline]
-    pub unsafe fn PyHeapType_GET_MEMBERS(etype: *mut PyHeapTypeObject) -> *mut ::structmember::PyMemberDef {
+    pub unsafe fn PyHeapType_GET_MEMBERS(etype: *mut PyHeapTypeObject) -> *mut crate::structmember::PyMemberDef {
         (etype as *mut c_char).offset(
-            (*::object::Py_TYPE(etype as *mut ::object::PyObject)).tp_basicsize as isize
-        ) as *mut ::structmember::PyMemberDef
+            (*::object::Py_TYPE(etype as *mut crate::object::PyObject)).tp_basicsize as isize
+        ) as *mut crate::structmember::PyMemberDef
     }
 }
 #[cfg(not(Py_LIMITED_API))]
@@ -645,7 +645,7 @@ impl Clone for PyType_Slot {
     fn clone(&self) -> PyType_Slot { *self }
 }
 impl Default for PyType_Slot {
-    fn default() -> PyType_Slot { unsafe { ::core::mem::zeroed() } }
+    fn default() -> PyType_Slot { unsafe { crate::core::mem::zeroed() } }
 }
 
 #[repr(C)]
@@ -661,7 +661,7 @@ impl Clone for PyType_Spec {
     fn clone(&self) -> PyType_Spec { *self }
 }
 impl Default for PyType_Spec {
-    fn default() -> PyType_Spec { unsafe { ::core::mem::zeroed() } }
+    fn default() -> PyType_Spec { unsafe { crate::core::mem::zeroed() } }
 }
 
 #[cfg_attr(windows, link(name="pythonXY"))] extern "C" {
@@ -716,7 +716,7 @@ pub unsafe fn PyType_CheckExact(op: *mut PyObject) -> c_int {
     pub fn PyType_Modified(t: *mut PyTypeObject);
     
     #[cfg(not(Py_LIMITED_API))]
-    pub fn PyObject_Print(o: *mut PyObject, fp: *mut ::libc::FILE, flags: c_int) -> c_int;
+    pub fn PyObject_Print(o: *mut PyObject, fp: *mut crate::libc::FILE, flags: c_int) -> c_int;
     pub fn PyObject_Repr(o: *mut PyObject) -> *mut PyObject;
     pub fn PyObject_Str(o: *mut PyObject) -> *mut PyObject;
     pub fn PyObject_ASCII(arg1: *mut PyObject) -> *mut PyObject;

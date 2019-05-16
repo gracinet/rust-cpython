@@ -55,7 +55,7 @@ pyobject_newtype!(PyUnicode, PyUnicode_Check, PyUnicode_Type);
 pub use PyString as PyUnicode;
 
 #[cfg(feature="python27-sys")]
-impl ::python::PythonObjectWithCheckedDowncast for PyString {
+impl crate::python::PythonObjectWithCheckedDowncast for PyString {
     #[inline]
     fn downcast_from<'p>(py: Python<'p>, obj: PyObject) -> Result<PyString, PythonObjectDowncastError<'p>> {
         if is_base_string(&obj) {
@@ -69,9 +69,9 @@ impl ::python::PythonObjectWithCheckedDowncast for PyString {
     fn downcast_borrow_from<'a, 'p>(py: Python<'p>, obj: &'a PyObject) -> Result<&'a PyString, PythonObjectDowncastError<'p>> {
         unsafe {
             if is_base_string(obj) {
-                Ok(::std::mem::transmute(obj))
+                Ok(std::mem::transmute(obj))
             } else {
-                Err(::python::PythonObjectDowncastError(py))
+                Err(crate::python::PythonObjectDowncastError(py))
             }
         }
     }
@@ -87,10 +87,10 @@ fn is_base_string(obj: &PyObject) -> bool {
 }
 
 #[cfg(feature="python27-sys")]
-impl ::python::PythonObjectWithTypeObject for PyString {
+impl crate::python::PythonObjectWithTypeObject for PyString {
     #[inline]
     fn type_object(py: Python) -> super::PyType {
-        unsafe { ::objects::typeobject::PyType::from_type_ptr(py, &mut ::ffi::PyBaseString_Type) }
+        unsafe { crate::objects::typeobject::PyType::from_type_ptr(py, &mut crate::ffi::PyBaseString_Type) }
     }
 }
 

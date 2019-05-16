@@ -59,7 +59,7 @@ impl Clone for PyObjectArenaAllocator {
 }
 #[cfg(all(not(Py_LIMITED_API), Py_3_4))]
 impl Default for PyObjectArenaAllocator {
-    #[inline] fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+    #[inline] fn default() -> Self { unsafe { crate::core::mem::zeroed() } }
 }
 #[cfg(all(not(Py_LIMITED_API), Py_3_4))]
 #[cfg_attr(windows, link(name="pythonXY"))] extern "C" {

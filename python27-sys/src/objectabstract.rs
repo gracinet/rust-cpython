@@ -248,28 +248,28 @@ pub unsafe fn PyIndex_Check(obj: *mut PyObject) -> c_int {
 
 #[inline]
 pub unsafe fn PySequence_Fast_GET_SIZE(o : *mut PyObject) -> Py_ssize_t {
-    if ::listobject::PyList_Check(o) != 0 {
-        ::listobject::PyList_GET_SIZE(o)
+    if crate::listobject::PyList_Check(o) != 0 {
+        crate::listobject::PyList_GET_SIZE(o)
     } else {
-        ::tupleobject::PyTuple_GET_SIZE(o)
+        crate::tupleobject::PyTuple_GET_SIZE(o)
     }
 }
 
 #[inline]
 pub unsafe fn PySequence_Fast_GET_ITEM(o : *mut PyObject, i : Py_ssize_t) -> *mut PyObject {
-    if ::listobject::PyList_Check(o) != 0 {
-        ::listobject::PyList_GET_ITEM(o, i)
+    if crate::listobject::PyList_Check(o) != 0 {
+        crate::listobject::PyList_GET_ITEM(o, i)
     } else {
-        ::tupleobject::PyTuple_GET_ITEM(o, i)
+        crate::tupleobject::PyTuple_GET_ITEM(o, i)
     }
 }
 
 #[inline]
 pub unsafe fn PySequence_Fast_ITEMS(o : *mut PyObject) -> *mut *mut PyObject {
-    if ::listobject::PyList_Check(o) != 0 {
-        (*(o as *mut ::listobject::PyListObject)).ob_item
+    if crate::listobject::PyList_Check(o) != 0 {
+        (*(o as *mut crate::listobject::PyListObject)).ob_item
     } else {
-        (*(o as *mut ::tupleobject::PyTupleObject)).ob_item.as_mut_ptr()
+        (*(o as *mut crate::tupleobject::PyTupleObject)).ob_item.as_mut_ptr()
     }
 }
 

@@ -165,7 +165,7 @@ impl PyBuffer {
         unsafe {
             ffi::PyBuffer_GetPointer(
                 &*self.0 as *const ffi::Py_buffer as *mut ffi::Py_buffer,
-                indices.as_ptr() as *mut usize as *mut ::Py_ssize_t
+                indices.as_ptr() as *mut usize as *mut crate::Py_ssize_t
             )
         }
     }
@@ -576,7 +576,7 @@ mod test {
     #[test]
     fn test_compatible_size() {
         // for the cast in PyBuffer::shape()
-        assert_eq!(std::mem::size_of::<::Py_ssize_t>(), std::mem::size_of::<usize>());
+        assert_eq!(std::mem::size_of::<crate::Py_ssize_t>(), std::mem::size_of::<usize>());
     }
 
     #[test]

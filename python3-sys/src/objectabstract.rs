@@ -119,7 +119,7 @@ pub unsafe fn PyObject_CheckBuffer(o: *mut PyObject) -> c_int {
 #[inline]
 pub unsafe fn PyIter_Check(o: *mut PyObject) -> c_int {
     (match (*(*o).ob_type).tp_iternext {
-        Some(tp_iternext) => tp_iternext as *const c_void != ::object::_PyObject_NextNotImplemented as *const c_void,
+        Some(tp_iternext) => tp_iternext as *const c_void != crate::object::_PyObject_NextNotImplemented as *const c_void,
         None => false
     }) as c_int
 }

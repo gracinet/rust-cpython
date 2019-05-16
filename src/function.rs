@@ -39,7 +39,7 @@ macro_rules! py_method_def {
         };
         METHOD_DEF.ml_name = concat!($name, "\0").as_ptr() as *const _;
         METHOD_DEF.ml_meth = Some(
-            ::std::mem::transmute::<$crate::_detail::ffi::PyCFunctionWithKeywords,
+            std::mem::transmute::<$crate::_detail::ffi::PyCFunctionWithKeywords,
                                   $crate::_detail::ffi::PyCFunction>($wrap)
         );
         &mut METHOD_DEF

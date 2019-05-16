@@ -120,7 +120,7 @@ macro_rules! cstr(
     ($s: tt) => (
         // TODO: verify that $s is a string literal without nuls
         unsafe {
-            ::std::ffi::CStr::from_ptr(concat!($s, "\0").as_ptr() as *const _)
+            std::ffi::CStr::from_ptr(concat!($s, "\0").as_ptr() as *const _)
         }
     );
 );
@@ -200,10 +200,10 @@ pub mod py_class;
 #[doc(hidden)]
 pub mod _detail {
     pub mod ffi {
-        pub use ::ffi::*;
+        pub use crate::ffi::*;
     }
     pub mod libc {
-        pub use ::libc::{c_char, c_void, c_int};
+        pub use crate::libc::{c_char, c_void, c_int};
     }
     pub use err::{from_owned_ptr_or_panic, result_from_owned_ptr};
     pub use function::{handle_callback, py_fn_impl, AbortOnDrop,

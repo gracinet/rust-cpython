@@ -421,7 +421,7 @@ pub unsafe fn from_owned_ptr_or_panic(py : Python, p : *mut ffi::PyObject) -> Py
 }
 
 pub unsafe fn result_cast_from_owned_ptr<T>(py : Python, p : *mut ffi::PyObject) -> PyResult<T>
-    where T: ::python::PythonObjectWithCheckedDowncast
+    where T: crate::python::PythonObjectWithCheckedDowncast
 {
     if p.is_null() {
         Err(PyErr::fetch(py))
@@ -431,7 +431,7 @@ pub unsafe fn result_cast_from_owned_ptr<T>(py : Python, p : *mut ffi::PyObject)
 }
 
 pub unsafe fn cast_from_owned_ptr_or_panic<T>(py : Python, p : *mut ffi::PyObject) -> T
-    where T: ::python::PythonObjectWithCheckedDowncast
+    where T: crate::python::PythonObjectWithCheckedDowncast
 {
     if p.is_null() {
         panic_after_error(py);

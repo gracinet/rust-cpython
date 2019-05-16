@@ -33,7 +33,7 @@ pub unsafe fn PyLong_CheckExact(op : *mut PyObject) -> c_int {
                              pend: *mut *mut c_char,
                              base: c_int) -> *mut PyObject;
     #[cfg(py_sys_config="Py_USING_UNICODE")]
-    pub fn PyLong_FromUnicode(u: *mut ::unicodeobject::Py_UNICODE, length: Py_ssize_t,
+    pub fn PyLong_FromUnicode(u: *mut crate::unicodeobject::Py_UNICODE, length: Py_ssize_t,
                               base: c_int) -> *mut PyObject;
     pub fn PyLong_FromVoidPtr(p: *mut c_void) -> *mut PyObject;
     
