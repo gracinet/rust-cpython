@@ -52,7 +52,7 @@ pyobject_newtype!(PyUnicode, PyUnicode_Check, PyUnicode_Type);
 /// Represents a Python unicode string.
 /// Corresponds to `unicode` in Python 2, and `str` in Python 3.
 #[cfg(feature="python3-sys")]
-pub use PyString as PyUnicode;
+pub use self::PyString as PyUnicode;
 
 #[cfg(feature="python27-sys")]
 impl crate::python::PythonObjectWithCheckedDowncast for PyString {
