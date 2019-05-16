@@ -1,10 +1,10 @@
 //! Work wih Python capsules
 //!
 use super::object::PyObject;
-use err::{self, PyErr, PyResult};
+use crate::err::{self, PyErr, PyResult};
 use ffi::{PyCapsule_GetPointer, PyCapsule_Import, PyCapsule_New};
 use libc::c_void;
-use python::{Python, ToPythonPointer};
+use crate::python::{Python, ToPythonPointer};
 use std::ffi::{CStr, CString, NulError};
 use std::mem;
 
@@ -402,7 +402,7 @@ macro_rules! py_capsule {
 /// py_capsule_fn!(from sys import capsfn as capsmod: fn(a: c_int) -> c_int);
 ///
 /// // One could, e.g., reexport if needed:
-/// pub use capsmod::CapsuleFn;
+/// pub use self::capsmod::CapsuleFn;
 ///
 /// fn retrieve_use_capsule() {
 ///     let gil = Python::acquire_gil();
