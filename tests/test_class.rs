@@ -884,14 +884,14 @@ fn context_manager() {
 }
 
 
-py_class!(class ClassWithProperties |py| {
+py_class!(class ClassWithAttributes |py| {
     data num: Cell<i32>;
 
     def get_num(&self) -> PyResult<i32> {
         Ok(self.num(py).get())
     }
 
-    property DATA {
+    attr myattr {
         get(&slf) -> PyResult<i32> {
             Ok(slf.num(py).get())
         }
@@ -908,12 +908,12 @@ fn class_with_properties() {
     let gil = Python::acquire_gil();
     let py = gil.python();
 
-    let inst = ClassWithProperties::create_instance(py, Cell::new(10)).unwrap();
+    let inst = ClassWithAttributes::create_instance(py, Cell::new(10)).unwrap();
 
     py_run!(py, inst, "assert inst.get_num() == 10");
-    py_run!(py, inst, "assert inst.get_num() == inst.DATA");
-    py_run!(py, inst, "inst.DATA = 20");
+    py_run!(py, inst, "assert inst.get_num() == inst.myattr");
+    py_run!(py, inst, "inst.myattr = 20");
     py_run!(py, inst, "assert inst.get_num() == 20");
-    py_run!(py, inst, "assert inst.get_num() == inst.DATA");
+    py_run!(py, inst, "assert inst.get_num() == inst.myattr");
 
 }

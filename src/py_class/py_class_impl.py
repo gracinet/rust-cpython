@@ -47,7 +47,7 @@ base_case = '''
             $gc:tt,
             /* data: */ [ $( { $data_offset:expr, $data_name:ident, $data_ty:ty } )* ]
         }
-        $slots:tt { $( $imp:item )* } $members:tt $properties:tt
+        $slots:tt { $( $imp:item )* } $members:tt $attributes:tt
     } => {
         py_coerce_item! {
             $($class_visibility)* struct $class { _unsafe_inner: $crate::PyObject }
@@ -184,7 +184,7 @@ base_case = '''
                     fn init($py: $crate::Python, module_name: Option<&str>) -> $crate::PyResult<$crate::PyType> {
                         py_class_type_object_dynamic_init!($class, $py, TYPE_OBJECT, module_name, $slots);
                         py_class_init_members!($class, $py, TYPE_OBJECT, $members);
-                        py_class_init_properties!($class, $py, TYPE_OBJECT, $properties);
+                        py_class_init_attributes!($class, $py, TYPE_OBJECT, $attributes);
                         unsafe {
                             if $crate::_detail::ffi::PyType_Ready(&mut TYPE_OBJECT) == 0 {
                                 Ok($crate::PyType::from_type_ptr($py, &mut TYPE_OBJECT))
@@ -198,15 +198,15 @@ base_case = '''
         }
     };
 
-    { { property $name:ident { $($body:tt)* } $($tail:tt)* }
+    { { attr $name:ident { $($body:tt)* } $($tail:tt)* }
         $class:ident $py:ident $info:tt $slots:tt { $( $imp:item )* } $members:tt
-        { $( $properties:expr; )* }
+        { $( $attributes:expr; )* }
     } => { py_class_impl! {
         { $($tail)* }
         $class $py $info $slots { $($imp)* } $members
-        /* properties: */ {
-            $( $properties; )*
-            py_class_property_impl! { { $($body)* } $class $py $name { } };
+        /* attributes: */ {
+            $( $attributes; )*
+            py_class_attribute_impl! { { $($body)* } $class $py $name { } };
         }
     }};
 '''
@@ -299,7 +299,7 @@ def generate_case(pattern, old_info=None, new_info=None, new_impl=None, new_slot
     else:
         write('$members:tt')
 
-    write('$properties:tt')
+    write('$attributes:tt')
 
     write('\n} => { py_class_impl! {\n')
     write('{ $($tail)* }\n')
@@ -343,7 +343,7 @@ def generate_case(pattern, old_info=None, new_info=None, new_impl=None, new_slot
         write('}')
     else:
         write('$members')
-    write('$properties')
+    write('$attributes')
     write('\n}};\n')
 
 def data_decl():

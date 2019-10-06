@@ -11,7 +11,7 @@ pub fn type_error_to_unit(py: ::Python, e: ::PyErr) -> ::PyResult<()> {
 
 #[macro_export]
 #[doc(hidden)]
-macro_rules! py_class_init_properties {
+macro_rules! py_class_init_attributes {
     ($class:ident, $py:ident, $type_object: ident, { }) => {{}};
     ($class:ident, $py:ident, $type_object: ident, { $( $prop:expr; )+ }) =>
     { unsafe {
@@ -37,7 +37,7 @@ macro_rules! py_class_init_properties {
 
 #[macro_export]
 #[doc(hidden)]
-macro_rules! py_class_property_impl {
+macro_rules! py_class_attribute_impl {
 
     ({} $class:ident $py:ident $name:ident { $( $descr_name:ident = $descr_expr:expr; )* } ) =>
     {{
@@ -59,7 +59,7 @@ macro_rules! py_class_property_impl {
     ( { get (&$slf:ident) -> $res_type:ty { $($body:tt)* } $($tail:tt)* }
         $class:ident $py:ident $name:ident { $( $descr_name:ident = $descr_expr:expr; )* } ) =>
     {
-        py_class_property_impl!{
+        py_class_attribute_impl!{
             { $($tail)* } $class $py $name
             /* methods: */ {
                 $( $descr_name = $descr_expr; )*
@@ -75,7 +75,6 @@ macro_rules! py_class_property_impl {
                         fn get($slf: &$class, $py: $crate::Python) -> $res_type {
                             $($body)*
                         };
-
                         $crate::_detail::handle_callback(
                             LOCATION, $crate::_detail::PyObjectCallbackConverter,
                             |py| {
@@ -96,7 +95,7 @@ macro_rules! py_class_property_impl {
             -> $res_type:ty { $( $body:tt )* } $($tail:tt)* }
         $class:ident $py:ident $name:ident { $( $descr_name:ident = $descr_expr:expr; )* } ) =>
     {
-        py_class_property_impl! {
+        py_class_attribute_impl! {
             { $($tail)* } $class $py $name
             /* methods: */ {
                 $( $descr_name = $descr_expr; )*
@@ -124,7 +123,7 @@ macro_rules! py_class_property_impl {
                                 let ret = match <$value_type as $crate::FromPyObject>::extract(py, &value) {
                                     Ok(value) => set(&slf, py, value),
                                     Err(e) =>
-                                        $crate::py_class::properties::type_error_to_unit(py, e)
+                                        $crate::py_class::attributes::type_error_to_unit(py, e)
                                 };
                                 $crate::PyDrop::release_ref(slf, py);
                                 $crate::PyDrop::release_ref(value, py);

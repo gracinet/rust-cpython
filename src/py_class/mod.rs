@@ -23,7 +23,7 @@ mod py_class_impl2;
 mod py_class_impl3;
 #[doc(hidden)] pub mod slots;
 #[doc(hidden)] pub mod members;
-#[doc(hidden)] pub mod properties;
+#[doc(hidden)] pub mod attributes;
 pub mod gc;
 
 use libc;
