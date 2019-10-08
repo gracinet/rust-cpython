@@ -892,15 +892,19 @@ py_class!(class ClassWithAttributes |py| {
     }
 
     attr myattr {
-        get(&slf) -> PyResult<i32> {
-            Ok(slf.num(py).get())
-        }
-        set(&slf, value: i32) -> PyResult<()> {
-            slf.num(py).set(value);
-            Ok(())
-        }
+        getter = get_num;
+        setter(i32) = set_num;
     }
 });
+
+impl ClassWithAttributes {
+
+    fn set_num(&self, py: Python, value: i32) -> PyResult<()> {
+        self.num(py).set(value);
+        Ok(())
+    }
+
+}
 
 
 #[test]

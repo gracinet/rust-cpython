@@ -47,8 +47,8 @@ macro_rules! py_class_attribute_impl {
         getset_def
     }};
 
-    ( { get (&$slf:ident) -> $res_type:ty { $($body:tt)* } $($tail:tt)* }
-        $class:ident $py:ident $name:ident { $( $descr_name:ident = $descr_expr:expr; )* } ) =>
+    ( { getter = $meth:ident; $($tail:tt)* }
+       $class:ident $py:ident $name:ident { $( $descr_name:ident = $descr_expr:expr; )* } ) =>
     {
         py_class_attribute_impl!{
             { $($tail)* } $class $py $name
@@ -63,15 +63,12 @@ macro_rules! py_class_attribute_impl {
                         const LOCATION: &'static str = concat!(
                             stringify!($class), ".getter_", stringify!($name), "()");
 
-                        fn get($slf: &$class, $py: $crate::Python) -> $res_type {
-                            $($body)*
-                        };
                         $crate::_detail::handle_callback(
                             LOCATION, $crate::_detail::PyObjectCallbackConverter,
                             |py| {
                                 let slf = $crate::PyObject::from_borrowed_ptr(
                                     py, slf).unchecked_cast_into::<$class>();
-                                let ret = get(&slf, py);
+                                let ret = slf.$meth(py);
                                 $crate::PyDrop::release_ref(slf, py);
                                 ret
                             })
@@ -82,9 +79,8 @@ macro_rules! py_class_attribute_impl {
         }
     };
 
-    ( { set(&$slf:ident, $value:ident : $value_type:ty)
-            -> $res_type:ty { $( $body:tt )* } $($tail:tt)* }
-        $class:ident $py:ident $name:ident { $( $descr_name:ident = $descr_expr:expr; )* } ) =>
+   ( { setter($value_type:ty) = $meth:ident; $($tail:tt)* }
+       $class:ident $py:ident $name:ident { $( $descr_name:ident = $descr_expr:expr; )* } ) =>
     {
         py_class_attribute_impl! {
             { $($tail)* } $class $py $name
@@ -100,11 +96,6 @@ macro_rules! py_class_attribute_impl {
                         const LOCATION: &'static str = concat!(
                             stringify!($class), ".setter_", stringify!($name), "()");
 
-                        fn set($slf: &$class,
-                               $py: $crate::Python, $value: $value_type) -> $res_type {
-                            $($body)*
-                        };
-
                         $crate::_detail::handle_callback(
                             LOCATION, $crate::py_class::slots::UnitCallbackConverter, move |py| {
                                 let slf = $crate::PyObject::from_borrowed_ptr(py, slf)
@@ -112,7 +103,7 @@ macro_rules! py_class_attribute_impl {
                                 let value = $crate::PyObject::from_borrowed_ptr(py, value);
 
                                 let ret =<$value_type as $crate::FromPyObject>::extract(py, &value)
-                                    .and_then(|v| set(&slf, py, v));
+                                    .and_then(|v| slf.$meth(py, v));
                                 $crate::PyDrop::release_ref(slf, py);
                                 $crate::PyDrop::release_ref(value, py);
                                 ret
