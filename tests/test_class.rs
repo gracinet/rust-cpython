@@ -915,5 +915,6 @@ fn class_with_properties() {
     py_run!(py, inst, "inst.myattr = 20");
     py_run!(py, inst, "assert inst.get_num() == 20");
     py_run!(py, inst, "assert inst.get_num() == inst.myattr");
-
+    py_expect_exception!(py, inst, "inst.myattr = 'a'", TypeError);
+    py_run!(py, inst, "assert inst.get_num() == 20");
 }

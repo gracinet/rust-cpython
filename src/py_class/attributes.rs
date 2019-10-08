@@ -1,14 +1,5 @@
 use ffi;
 
-pub fn type_error_to_unit(py: ::Python, e: ::PyErr) -> ::PyResult<()> {
-    if e.matches(py, py.get_type::<::exc::TypeError>()) {
-        Ok(())
-    } else {
-        Err(e)
-    }
-}
-
-
 #[macro_export]
 #[doc(hidden)]
 macro_rules! py_class_init_attributes {
@@ -120,11 +111,8 @@ macro_rules! py_class_attribute_impl {
                                     .unchecked_cast_into::<$class>();
                                 let value = $crate::PyObject::from_borrowed_ptr(py, value);
 
-                                let ret = match <$value_type as $crate::FromPyObject>::extract(py, &value) {
-                                    Ok(value) => set(&slf, py, value),
-                                    Err(e) =>
-                                        $crate::py_class::attributes::type_error_to_unit(py, e)
-                                };
+                                let ret =<$value_type as $crate::FromPyObject>::extract(py, &value)
+                                    .and_then(|v| set(&slf, py, v));
                                 $crate::PyDrop::release_ref(slf, py);
                                 $crate::PyDrop::release_ref(value, py);
                                 ret
